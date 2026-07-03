@@ -1,0 +1,1809 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anlık Menü — Platform Prototipi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#14201A;
+  --ink-soft:#1F2D24;
+  --ink-line: rgba(243,238,221,0.14);
+  --chalk:#F3EEDD;
+  --chalk-dim:#C9C2AC;
+  --paper:#FBF8F2;
+  --paper-line:#E4DECB;
+  --paper-ink:#20241B;
+  --gold:#D9A441;
+  --gold-deep:#B9822C;
+  --sauce:#C1432B;
+  --sage:#6E8F63;
+  --radius:10px;
+  --font-display:'Bricolage Grotesque', serif;
+  --font-body:'Inter', sans-serif;
+  --font-mono:'IBM Plex Mono', monospace;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:var(--font-body);
+  background:var(--paper);
+  color:var(--paper-ink);
+  -webkit-font-smoothing:antialiased;
+  background-image:
+    radial-gradient(circle at top left, rgba(217,164,65,.10), transparent 30%),
+    radial-gradient(circle at 80% 10%, rgba(193,67,43,.08), transparent 24%),
+    linear-gradient(to bottom, rgba(255,255,255,.38), rgba(255,255,255,0));
+}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;}
+h1,h2,h3,h4{font-family:var(--font-display);margin:0;letter-spacing:-0.01em;}
+p{margin:0;}
+input,select,textarea{font-family:inherit;}
+::selection{background:rgba(217,164,65,.24);color:var(--ink);}
+
+/* ---------- Route bar (mock browser chrome) ---------- */
+.route-bar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;gap:10px;
+  background:var(--ink);color:var(--chalk);
+  padding:9px 14px;
+  border-bottom:1px solid var(--ink-line);
+}
+.route-bar-controls{display:flex;gap:4px;}
+.rb-btn{
+  background:transparent;border:1px solid var(--ink-line);color:var(--chalk-dim);
+  width:26px;height:26px;border-radius:7px;font-size:13px;line-height:1;
+}
+.rb-btn:hover{color:var(--chalk);border-color:var(--chalk-dim);}
+.route-bar-url{
+  flex:1;
+  background:var(--ink-soft);
+  border:1px solid var(--ink-line);
+  border-radius:20px;
+  padding:6px 14px;
+  font-family:var(--font-mono);
+  font-size:12.5px;
+  display:flex;align-items:center;gap:7px;
+  color:var(--chalk-dim);
+  overflow:hidden;white-space:nowrap;
+}
+.rb-lock{font-size:11px;opacity:.7;}
+.rb-domain{color:var(--chalk);font-weight:600;}
+.rb-path{color:var(--gold);}
+.rb-home{
+  width:26px;height:26px;border-radius:7px;border:1px solid var(--ink-line);
+  display:flex;align-items:center;justify-content:center;color:var(--chalk-dim);font-size:14px;
+}
+.rb-home:hover{color:var(--gold);border-color:var(--gold);}
+
+/* ---------- Layout helpers ---------- */
+.page{max-width:1180px;margin:0 auto;padding:0 24px;}
+.dark{background:var(--ink);color:var(--chalk);}
+.section{padding:56px 0;}
+.section-tight{padding:32px 0;}
+.surface{
+  background:#fff;
+  border:1px solid var(--paper-line);
+  border-radius:18px;
+  box-shadow:0 12px 36px rgba(20,32,26,.06);
+}
+.eyebrow{
+  font-family:var(--font-mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:10px;display:block;
+}
+.muted{color:var(--chalk-dim);}
+.paper .muted, .paper-ink-muted{color:#6b6656;}
+.section-note{
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:#8b8570;
+}
+.section-note span{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 10px;border-radius:999px;border:1px solid var(--paper-line);background:#fff;
+}
+
+/* ---------- Buttons / badges ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  border-radius:8px;border:1px solid transparent;
+  padding:10px 18px;font-size:14px;font-weight:600;
+  transition:transform .12s ease, opacity .12s ease;
+}
+.btn:active{transform:scale(.97);}
+.btn-gold{background:var(--gold);color:var(--ink);}
+.btn-gold:hover{background:var(--gold-deep);}
+.btn-outline{border-color:var(--chalk-dim);color:var(--chalk);}
+.btn-outline:hover{border-color:var(--chalk);}
+.btn-outline-paper{border-color:var(--paper-line);color:var(--paper-ink);background:#fff;}
+.btn-outline-paper:hover{border-color:var(--gold-deep);}
+.btn-sauce{background:var(--sauce);color:#fff;}
+.btn-sm{padding:6px 12px;font-size:12.5px;border-radius:6px;}
+.btn-disabled{opacity:.45;cursor:not-allowed;}
+.badge{
+  font-family:var(--font-mono);font-size:11px;padding:3px 9px;border-radius:20px;
+  display:inline-flex;align-items:center;gap:5px;font-weight:600;letter-spacing:.02em;
+}
+.badge-open{background:rgba(110,143,99,.15);color:var(--sage);}
+.badge-closed{background:rgba(193,67,43,.13);color:var(--sauce);}
+.badge-gold{background:rgba(217,164,65,.16);color:var(--gold-deep);}
+.badge-line{border:1px solid var(--paper-line);color:#6b6656;background:#fff;}
+.badge-dark{border:1px solid var(--ink-line);color:var(--chalk-dim);}
+
+/* ---------- Home ---------- */
+.hero-chalk{
+  padding:70px 0 46px;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(217,164,65,.10), transparent 40%),
+    radial-gradient(circle at 85% 0%, rgba(193,67,43,.10), transparent 45%),
+    var(--ink);
+}
+.hero-title{font-size:clamp(38px,6vw,64px);color:var(--chalk);line-height:1.02;max-width:720px;}
+.hero-title em{color:var(--gold);font-style:normal;}
+.hero-sub{margin-top:16px;max-width:520px;font-size:16.5px;color:var(--chalk-dim);line-height:1.55;}
+.hero-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1.1fr) minmax(290px,.9fr);
+  gap:24px;
+  align-items:end;
+}
+.hero-stats{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.stat-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--ink-line);
+  border-radius:14px;
+  padding:16px;
+}
+.stat-card strong{
+  display:block;
+  font-family:var(--font-display);
+  font-size:22px;
+  color:var(--chalk);
+  margin-top:4px;
+}
+.stat-card span{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--chalk-dim);
+}
+.hero-summary{
+  margin-top:18px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.hero-summary .badge{background:rgba(255,255,255,.05);}
+.search-row{
+  margin-top:34px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;
+}
+.search-box{
+  flex:1;min-width:240px;
+  background:var(--ink-soft);border:1px solid var(--ink-line);border-radius:10px;
+  padding:13px 16px;color:var(--chalk);font-size:14.5px;
+}
+.search-box::placeholder{color:var(--chalk-dim);}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px;}
+.chip{
+  font-family:var(--font-mono);font-size:12.5px;padding:7px 14px;border-radius:20px;
+  border:1px solid var(--ink-line);color:var(--chalk-dim);background:transparent;
+}
+.chip.active{background:var(--gold);color:var(--ink);border-color:var(--gold);font-weight:700;}
+.chip:hover{border-color:var(--gold);}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:18px;}
+.brand-card{
+  background:var(--ink-soft);border:1px solid var(--ink-line);border-radius:14px;
+  padding:20px;display:flex;flex-direction:column;gap:12px;transition:border-color .15s ease, transform .15s ease;
+  position:relative;overflow:hidden;
+}
+.brand-card:hover{border-color:var(--gold);transform:translateY(-2px);}
+.brand-card::after{
+  content:'';
+  position:absolute;inset:auto -18px -18px auto;
+  width:110px;height:110px;border-radius:50%;
+  background:radial-gradient(circle, rgba(217,164,65,.16), transparent 65%);
+  pointer-events:none;
+}
+.brand-emoji{
+  width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;background:rgba(217,164,65,.14);
+}
+.brand-logo{
+  width:46px;height:46px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  overflow:hidden;background:rgba(217,164,65,.14);font-size:22px;font-weight:700;flex-shrink:0;
+}
+.brand-logo img{width:100%;height:100%;object-fit:cover;display:block;}
+.brand-card h3{color:var(--chalk);font-size:19px;}
+.brand-card .cat{font-family:var(--font-mono);font-size:11.5px;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;}
+.brand-card .tag{color:var(--chalk-dim);font-size:13.5px;line-height:1.45;flex:1;}
+.brand-card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:4px;}
+
+.section-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:22px;flex-wrap:wrap;gap:10px;}
+.section-head h2{font-size:26px;}
+.section-head .muted{font-size:13.5px;}
+.section-title{display:flex;flex-direction:column;gap:4px;}
+.section-subtitle{
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#8b8570;
+}
+
+/* ---------- Brand page ---------- */
+.brand-hero{
+  padding:52px 0 38px;background:var(--ink);
+  border-bottom:1px solid var(--ink-line);
+}
+.brand-hero-top{display:flex;gap:18px;align-items:center;}
+.brand-hero-icon{
+  width:64px;height:64px;border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-size:30px;background:rgba(217,164,65,.15);border:1px solid var(--ink-line);
+}
+.brand-hero-icon img{width:100%;height:100%;object-fit:cover;display:block;border-radius:16px;}
+.branch-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:26px;}
+.branch-card{
+  background:var(--paper);border:1px solid var(--paper-line);border-radius:14px;padding:20px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.branch-card h4{font-size:17px;}
+.branch-card .addr{font-size:13px;color:#6b6656;line-height:1.5;}
+.branch-card-foot{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.back-link{font-family:var(--font-mono);font-size:12.5px;color:var(--chalk-dim);display:inline-flex;gap:6px;align-items:center;margin-bottom:18px;}
+.back-link:hover{color:var(--gold);}
+.branch-meta{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;
+}
+.branch-meta .badge{background:rgba(255,255,255,.05);}
+
+/* ---------- Branch / QR menu ---------- */
+.campaign-banner{
+  background:var(--brand-accent, var(--sauce));color:#fff;padding:10px 0;overflow:hidden;
+}
+.campaign-banner .page{display:flex;align-items:center;gap:10px;}
+.campaign-banner-shell{display:flex;align-items:center;gap:10px;min-width:0;width:100%;}
+.campaign-banner-label{
+  font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  white-space:nowrap;flex-shrink:0;opacity:.95;
+}
+.campaign-banner-track-wrap{overflow:hidden;min-width:0;flex:1;}
+.campaign-banner-track{
+  display:flex;align-items:center;gap:28px;white-space:nowrap;
+  animation:campaignMarquee 22s linear infinite;
+  will-change:transform;
+}
+.campaign-banner-item{
+  display:inline-flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0;
+}
+.campaign-banner-dot{width:6px;height:6px;border-radius:999px;background:rgba(255,255,255,.8);display:inline-block;flex-shrink:0;}
+@keyframes campaignMarquee{
+  from{transform:translateX(0);}
+  to{transform:translateX(-50%);}
+}
+.branch-topbar{background:var(--ink);padding:26px 0 20px;position:sticky;top:45px;z-index:30;border-bottom:1px solid var(--ink-line);}
+.branch-topbar h2{color:var(--chalk);font-size:22px;}
+.branch-header-row{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;
+}
+.branch-quickinfo{
+  display:flex;gap:8px;flex-wrap:wrap;
+  margin-top:12px;
+}
+.branch-quickinfo .badge{background:rgba(255,255,255,.05);}
+.tabs{display:flex;gap:6px;margin-top:16px;overflow-x:auto;padding-bottom:2px;}
+.tab{
+  font-family:var(--font-mono);font-size:12.5px;padding:8px 15px;border-radius:20px;white-space:nowrap;
+  border:1px solid var(--ink-line);color:var(--chalk-dim);
+}
+.tab.active{background:var(--brand-accent, var(--chalk));color:var(--ink);border-color:var(--brand-accent, var(--chalk));font-weight:700;}
+.menu-search{
+  margin-top:14px;width:100%;background:var(--ink-soft);border:1px solid var(--ink-line);
+  border-radius:8px;padding:10px 14px;color:var(--chalk);font-size:13.5px;
+}
+.menu-search:focus{outline:2px solid var(--brand-accent, var(--gold));outline-offset:1px;}
+.product-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px;margin:30px 0;}
+.menu-category-block{margin:0 0 28px;}
+.menu-category-block .product-grid{margin:0;}
+.menu-category-head{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:10px;flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.menu-category-head h3{font-size:21px;line-height:1.1;color:var(--paper-ink);}
+.menu-category-head .badge{align-self:flex-start;}
+.product-card{
+  background:#fff;border:1px solid var(--paper-line);border-radius:14px;overflow:hidden;
+  display:flex;flex-direction:column;transition:transform .15s ease, box-shadow .15s ease;
+  position:relative;
+}
+.product-card:hover{transform:translateY(-3px);box-shadow:0 10px 24px rgba(20,32,26,.08);}
+.product-card::before{
+  content:'';
+  position:absolute;inset:0 0 auto 0;height:3px;
+  background:linear-gradient(90deg, var(--brand-accent, var(--gold)), rgba(193,67,43,.7));
+}
+.product-thumb{
+  height:110px;display:flex;align-items:center;justify-content:center;font-size:38px;
+  background:linear-gradient(135deg, rgba(217,164,65,.18), rgba(193,67,43,.10));
+}
+.product-thumb img{width:100%;height:100%;object-fit:cover;display:block;}
+.product-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:8px;flex:1;}
+.product-body h4{font-size:15.5px;}
+.product-body .desc{font-size:12.5px;color:#6b6656;line-height:1.45;min-height:34px;}
+.product-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;}
+.price{font-family:var(--font-mono);font-weight:700;font-size:15px;}
+.allergen-row{display:flex;gap:5px;flex-wrap:wrap;}
+
+.sticky-cta{
+  position:sticky;bottom:0;background:var(--ink);border-top:1px solid var(--ink-line);
+  padding:14px 0;
+}
+.sticky-cta .page{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+
+/* ---------- Modal ---------- */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(20,32,26,.55);backdrop-filter:blur(2px);
+  display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;
+}
+.modal{
+  background:#fff;border-radius:16px;max-width:460px;width:100%;overflow:hidden;
+  max-height:88vh;overflow-y:auto;
+}
+.modal-grid{display:grid;grid-template-columns:1fr;gap:14px;}
+.modal-hero{height:150px;display:flex;align-items:center;justify-content:center;font-size:56px;
+  background:linear-gradient(135deg, rgba(217,164,65,.22), rgba(193,67,43,.12));}
+.modal-body{padding:22px 24px 26px;}
+.modal-close{
+  position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;
+  background:rgba(255,255,255,.85);border:none;font-size:16px;
+}
+.modal-rel{position:relative;}
+.detail-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--paper-line);font-size:13.5px;}
+.detail-row:last-child{border-bottom:none;}
+
+/* ---------- Admin layout ---------- */
+.admin-shell{background:var(--paper);min-height:60vh;}
+.admin-header{
+  background:var(--ink);color:var(--chalk);padding:26px 0;
+}
+.admin-header .page{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.role-pill{
+  font-family:var(--font-mono);font-size:11px;border:1px solid var(--ink-line);color:var(--chalk-dim);
+  padding:5px 12px;border-radius:20px;
+}
+.admin-layout{display:flex;gap:28px;padding:30px 0 70px;align-items:flex-start;}
+.sidebar{
+  width:210px;flex-shrink:0;background:#fff;border:1px solid var(--paper-line);border-radius:14px;
+  padding:12px;position:sticky;top:56px;
+}
+.sidebar-item{
+  display:block;padding:10px 12px;border-radius:8px;font-size:13.5px;font-weight:600;color:#6b6656;margin-bottom:2px;
+}
+.sidebar-item.active{background:var(--ink);color:var(--chalk);}
+.sidebar-item:hover:not(.active){background:var(--paper);color:var(--paper-ink);}
+.admin-main{flex:1;min-width:0;}
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:26px;}
+.kpi-card{background:#fff;border:1px solid var(--paper-line);border-radius:14px;padding:18px;}
+.kpi-card .kpi-label{font-family:var(--font-mono);font-size:11px;color:#8b8570;text-transform:uppercase;letter-spacing:.05em;}
+.kpi-card .kpi-value{font-family:var(--font-display);font-size:26px;margin-top:6px;}
+.kpi-card .kpi-trend{font-size:12px;margin-top:4px;font-weight:600;}
+.kpi-up{color:var(--sage);}
+.kpi-down{color:var(--sauce);}
+
+.panel{background:#fff;border:1px solid var(--paper-line);border-radius:14px;padding:22px;margin-bottom:18px;}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px;}
+.panel-head h3{font-size:17px;}
+.panel-title{display:flex;flex-direction:column;gap:4px;}
+.panel-subtitle{
+  font-family:var(--font-mono);
+  font-size:10.5px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:#8b8570;
+}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;}
+th{
+  text-align:left;font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.04em;
+  color:#8b8570;padding:8px 10px;border-bottom:1px solid var(--paper-line);
+}
+td{padding:10px 10px;border-bottom:1px solid var(--paper-line);}
+tr:last-child td{border-bottom:none;}
+.row-actions{display:flex;gap:6px;}
+
+.switch{
+  width:38px;height:22px;border-radius:20px;position:relative;border:none;background:var(--paper-line);flex-shrink:0;
+}
+.switch.on{background:var(--sage);}
+.switch::after{
+  content:'';position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;
+  transition:left .15s ease;
+}
+.switch.on::after{left:18px;}
+
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.field{display:flex;flex-direction:column;gap:6px;font-size:13px;}
+.field label{font-weight:600;color:#4a4636;}
+.field input, .field select, .field textarea{
+  border:1px solid var(--paper-line);border-radius:8px;padding:10px 12px;font-size:13.5px;background:var(--paper);
+}
+.field input:focus, .field select:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.image-preview{
+  min-height:120px;border:1px dashed var(--paper-line);border-radius:10px;background:#fff;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;color:#8b8570;font-size:12.5px;
+}
+.image-preview img{width:100%;height:100%;object-fit:cover;display:block;}
+
+.wizard-steps{display:flex;gap:6px;margin-bottom:24px;}
+.wstep{
+  flex:1;text-align:center;padding:10px 6px;border-radius:8px;font-family:var(--font-mono);font-size:11.5px;
+  background:var(--paper);border:1px solid var(--paper-line);color:#8b8570;
+}
+.wstep.on{background:var(--ink);color:var(--chalk);border-color:var(--ink);font-weight:700;}
+.wstep.done{background:rgba(110,143,99,.15);color:var(--sage);border-color:transparent;}
+
+.swatches{display:flex;gap:10px;flex-wrap:wrap;}
+.swatch{
+  width:34px;height:34px;border-radius:9px;border:2px solid transparent;cursor:pointer;
+}
+.swatch.sel{border-color:var(--ink);}
+
+.toast{
+  position:fixed;bottom:26px;left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--chalk);padding:12px 22px;border-radius:30px;
+  font-size:13.5px;z-index:200;box-shadow:0 10px 30px rgba(0,0,0,.25);
+  display:flex;align-items:center;gap:8px;
+}
+.campaign-popup{
+  position:fixed;inset:0;z-index:180;
+  background:rgba(20,32,26,.42);
+  backdrop-filter:blur(4px);
+  display:flex;align-items:flex-end;justify-content:flex-end;
+  padding:20px;
+}
+.campaign-popup-card{
+  position:relative;
+  width:min(420px,100%);
+  background:#fff;
+  border:1px solid var(--paper-line);
+  border-radius:18px;
+  box-shadow:0 24px 60px rgba(20,32,26,.22);
+  padding:20px 20px 18px;
+}
+.campaign-popup-eyebrow{
+  display:inline-flex;
+  font-family:var(--font-mono);
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--gold-deep);
+  margin-bottom:10px;
+}
+.campaign-popup-card h3{font-size:22px;}
+.campaign-popup-card p{margin-top:8px;color:#6b6656;line-height:1.5;}
+.campaign-popup-meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+.campaign-popup-close{
+  position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:999px;border:none;
+  background:rgba(20,32,26,.06);color:var(--paper-ink);
+}
+.empty-state{padding:40px 20px;text-align:center;color:#8b8570;font-size:13.5px;}
+.empty-state strong{display:block;color:#5f5a4b;margin-bottom:6px;}
+
+footer{padding:30px 0;background:var(--ink);color:var(--chalk-dim);font-size:12.5px;text-align:center;}
+footer a{color:var(--gold);}
+
+@media (max-width:760px){
+  .hero-grid{grid-template-columns:1fr;}
+  .hero-stats{grid-template-columns:1fr 1fr;}
+  .search-row{margin-top:24px;}
+  .admin-layout{flex-direction:column;}
+  .sidebar{width:100%;position:static;display:flex;overflow-x:auto;gap:4px;}
+  .sidebar-item{white-space:nowrap;}
+  .form-grid{grid-template-columns:1fr;}
+  .hero-title{font-size:36px;}
+  .branch-topbar{top:44px;}
+  .branch-header-row{flex-direction:column;}
+  .branch-card-foot,.product-foot{gap:10px;align-items:flex-start;flex-direction:column;}
+  .modal{max-height:92vh;}
+  .campaign-popup{align-items:flex-end;justify-content:center;padding:12px;}
+  .campaign-popup-card{width:100%;}
+  .campaign-banner-text{white-space:normal;}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* =========================================================
+   DATA
+========================================================= */
+function cloneCats(t){ return JSON.parse(JSON.stringify(t)); }
+
+const MENU_TEMPLATES = {
+  grill: [
+    {name:'Başlangıçlar', products:[
+      {id:'humus', emoji:'🥣', name:'Humus', price:120, allergens:['—'], kcal:210, desc:'Nohut, tahin ve zeytinyağı ile ev yapımı humus.'},
+      {id:'cigkofte', emoji:'🌯', name:'Çiğ Köfte Lavaş', price:140, allergens:['Gluten'], kcal:320, desc:'Bulgur, biber salçası ve taze marul ile.'}
+    ]},
+    {name:'Izgaralar', products:[
+      {id:'adana', emoji:'🍢', name:'Adana Kebap', price:320, allergens:['Gluten'], kcal:640, desc:'Elde çekilmiş kıyma, közlenmiş biber ve domates ile.', campaign:'Günün Menüsü'},
+      {id:'pirzola', emoji:'🍖', name:'Kuzu Pirzola', price:450, allergens:['—'], kcal:580, desc:'Marine edilmiş kuzu pirzola, közde pişirilir.'}
+    ]},
+    {name:'Tatlılar', products:[
+      {id:'kunefe', emoji:'🍮', name:'Künefe', price:180, allergens:['Gluten','Süt'], kcal:520, desc:'Sıcak servis edilir, antep fıstığı ile.'}
+    ]},
+    {name:'İçecekler', products:[
+      {id:'ayran', emoji:'🥛', name:'Ayran', price:60, allergens:['Süt'], kcal:90, desc:'Ev yapımı, soğuk servis.'},
+      {id:'salgam', emoji:'🥤', name:'Şalgam', price:50, allergens:['—'], kcal:20, desc:'Acılı, geleneksel tarif.'}
+    ]}
+  ],
+  seafood: [
+    {name:'Mezeler', products:[
+      {id:'midye', emoji:'🦪', name:'Midye Dolma', price:160, allergens:['Kabuklu Deniz Ürünü'], kcal:280, desc:'Baharatlı pilav ile doldurulmuş, 6 adet.'},
+      {id:'ahtapot', emoji:'🐙', name:'Ahtapot Salatası', price:220, allergens:['Yumuşakça'], kcal:240, desc:'Zeytinyağlı, taze roka ile.'}
+    ]},
+    {name:'Balıklar', products:[
+      {id:'levrek', emoji:'🐟', name:'Levrek Izgara', price:380, allergens:['Balık'], kcal:410, desc:'Günlük taze levrek, limon ve roka ile.', campaign:'Günün Balığı'},
+      {id:'karides', emoji:'🍤', name:'Karides Güveç', price:410, allergens:['Kabuklu Deniz Ürünü'], kcal:460, desc:'Domates sos ve kaşar peyniri ile güveçte.'}
+    ]},
+    {name:'Tatlılar', products:[
+      {id:'sutlac', emoji:'🍮', name:'Fırın Sütlaç', price:110, allergens:['Süt'], kcal:290, desc:'Geleneksel tarif, fırında kızartılmış.'}
+    ]}
+  ],
+  italian: [
+    {name:'Pizzalar', products:[
+      {id:'margherita', emoji:'🍕', name:'Margherita', price:280, allergens:['Gluten','Süt'], kcal:720, desc:'Domates sos, mozzarella ve fesleğen.'},
+      {id:'tartufo', emoji:'🍕', name:'Tartufo Pizza', price:340, allergens:['Gluten','Süt'], kcal:780, desc:'Trüf mantarı kreması ve porcini ile.', campaign:'2. Pizza %50'}
+    ]},
+    {name:'Makarnalar', products:[
+      {id:'arrabbiata', emoji:'🍝', name:'Penne Arrabbiata', price:250, allergens:['Gluten'], kcal:520, desc:'Acılı domates sos ile.'}
+    ]},
+    {name:'Tatlılar', products:[
+      {id:'tiramisu', emoji:'🍰', name:'Tiramisu', price:170, allergens:['Gluten','Süt','Yumurta'], kcal:430, desc:'Ev yapımı, kakao tozu ile.'}
+    ]}
+  ],
+  cafe: [
+    {name:'Kahveler', products:[
+      {id:'filtre', emoji:'☕', name:'Filtre Kahve', price:90, allergens:['—'], kcal:5, desc:'Günlük demlenen özel harman.'},
+      {id:'coldbrew', emoji:'🧊', name:'Cold Brew', price:110, allergens:['—'], kcal:10, desc:'18 saat soğuk demleme.'}
+    ]},
+    {name:'Atıştırmalıklar', products:[
+      {id:'cheesecake', emoji:'🍰', name:'Cheesecake', price:140, allergens:['Gluten','Süt','Yumurta'], kcal:380, desc:'Kırmızı meyve soslu.'}
+    ]},
+    {name:'Soğuk İçecekler', products:[
+      {id:'limonata', emoji:'🍋', name:'Nane Limonata', price:95, allergens:['—'], kcal:120, desc:'Taze nane ve limon ile.'}
+    ]}
+  ],
+  general: [
+    {name:'Genel', products:[]}
+  ]
+};
+
+const BRANDS = [
+  { slug:'mangal45', name:'Mangal45', category:'Izgara & Kebap', accent:'#C1432B', emoji:'🍖', logo:'🍖',
+    tagline:'Ateşin üstünde, 45 yıllık ustalıkla.',
+    staff:[
+      {name:'Ayşe Kaya', role:'Branch Manager', branch:'Kadıköy', permissions:['manage_menu','manage_campaigns','view_analytics']},
+      {name:'Mert Demir', role:'Garson', branch:'Kadıköy', permissions:['view_menu','manage_table_notes']}
+    ],
+    branches:[
+      {slug:'kadikoy', name:'Kadıköy', address:'Caferağa Mah. Moda Cd. No:12', hours:'11:00 – 23:00', status:'open',
+        categories:cloneCats(MENU_TEMPLATES.grill),
+        campaigns:[
+          {name:'Hafta İçi Öğlen Menüsü', detail:'11:00–15:00 arası ana yemeklerde %15 indirim', active:true, window:'11:00-15:00', popup:true},
+          {name:'Gece Tatlı Molası', detail:'22:00–23:30 arası künefede %20 indirim', active:true, window:'22:00-23:30', popup:true}
+        ]},
+      {slug:'besiktas', name:'Beşiktaş', address:'Sinanpaşa Mah. Şair Nedim Cd. No:5', hours:'11:00 – 00:00', status:'open',
+        categories:cloneCats(MENU_TEMPLATES.grill), campaigns:[]}
+    ]},
+  { slug:'denizkizi', name:'Deniz Kızı', category:'Deniz Mahsulleri', accent:'#2E6E8E', emoji:'🐟', logo:'🐟',
+    tagline:'Sabah tutulan, akşam sofrada.',
+    staff:[
+      {name:'Elif Yılmaz', role:'Branch Manager', branch:'Moda', permissions:['manage_menu','manage_campaigns','view_analytics']}
+    ],
+    branches:[
+      {slug:'moda', name:'Moda', address:'Moda Cd. No:88', hours:'12:00 – 00:00', status:'open',
+        categories:cloneCats(MENU_TEMPLATES.seafood),
+        campaigns:[
+          {name:'Günün Balığı', detail:'Şef önerisi balıkta masa başı %10 indirim', active:true, window:'12:00-17:00', popup:true},
+          {name:'Akşam Rakı Mezesi', detail:'18:30–21:30 arası seçili mezelerde %15 indirim', active:true, window:'18:30-21:30', popup:true}
+        ]}
+    ]},
+  { slug:'basilco', name:'Basil & Co', category:'İtalyan', accent:'#7A8F3F', emoji:'🍕', logo:'🍕',
+    tagline:'Napoli usulü, İstanbul ruhuyla.',
+    staff:[
+      {name:'Can Öz', role:'Restaurant Owner', branch:'Nişantaşı', permissions:['manage_branches','manage_menu','manage_campaigns','manage_staff','view_analytics','manage_theme']}
+    ],
+    branches:[
+      {slug:'nisantasi', name:'Nişantaşı', address:'Teşvikiye Cd. No:31', hours:'10:00 – 23:00', status:'open',
+        categories:cloneCats(MENU_TEMPLATES.italian),
+        campaigns:[
+          {name:'2. Pizza %50', detail:'İkinci pizzada geçerli, hafta içi', active:true, window:'12:00-16:00', popup:true},
+          {name:'Akşam Aperitivo', detail:'19:00–21:00 arası pizzalarda ücretsiz içecek', active:true, window:'19:00-21:00', popup:true}
+        ]},
+      {slug:'bagdatcaddesi', name:'Bağdat Caddesi', address:'Bağdat Cd. No:210', hours:'10:00 – 23:00', status:'closed',
+        categories:cloneCats(MENU_TEMPLATES.italian), campaigns:[]}
+    ]},
+  { slug:'kahverotasi', name:'Kahve Rotası', category:'Kahve & Cafe', accent:'#B9822C', emoji:'☕', logo:'☕',
+    tagline:'Her durak, yeni bir demleme.',
+    staff:[
+      {name:'Seda Arslan', role:'Branch Manager', branch:'Karaköy', permissions:['manage_menu','manage_campaigns','view_analytics']}
+    ],
+    branches:[
+      {slug:'karakoy', name:'Karaköy', address:'Kemankeş Cd. No:47', hours:'08:00 – 20:00', status:'open',
+        categories:cloneCats(MENU_TEMPLATES.cafe), campaigns:[]}
+    ]}
+];
+
+const CATEGORY_LIST = ['Tümü','Izgara & Kebap','Deniz Mahsulleri','İtalyan','Kahve & Cafe'];
+
+/* =========================================================
+   STATE
+========================================================= */
+const UI = {
+  homeQuery:'',
+  homeCategory:'Tümü',
+  activeTab:{},        // branchKey -> category name
+  menuQuery:{},        // branchKey -> search text
+  activeProduct:null,  // {b,br,ci,pi}
+  activeCampaignPopup:null,
+  campaignPopupRouteKey:'',
+  adminTab:'overview',
+  wizardStep:1,
+  wizardData:{name:'', category:'Izgara & Kebap', tagline:'', logo:'', branchName:'', branchAddress:'', branchHours:'10:00 – 22:00', slug:''},
+  showAddProduct:false,
+  productForm:{mode:'create', bs:'', brs:'', ci:null, pi:null, name:'', price:'', originalPrice:'', category:'', kcal:'', allergens:'', desc:'', emoji:'🍽️', campaignLabel:'', campaignStart:'', campaignEnd:'', featured:false, image:'', imageType:'url'},
+  toast:null,
+  ownerBranchAddOpen:false,
+  campaignBannerIndex:{},
+  campaignPopupSeen:{},
+  ownerStaffForm:{name:'', role:'Branch Manager', branch:'', permissions:['manage_menu','manage_campaigns','view_analytics']}
+};
+
+function findBrand(slug){ return BRANDS.find(b=>b.slug===slug); }
+function findBranch(brand, slug){ return brand ? brand.branches.find(x=>x.slug===slug) : null; }
+function slugify(s){
+  return (s||'').toLowerCase()
+    .replace(/ç/g,'c').replace(/ğ/g,'g').replace(/ı/g,'i').replace(/ö/g,'o').replace(/ş/g,'s').replace(/ü/g,'u')
+    .replace(/[^a-z0-9]+/g,'')
+    .slice(0,24);
+}
+function fmt(n){ return n.toLocaleString('tr-TR')+' ₺'; }
+function escapeHtml(s){
+  return String(s ?? '')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;');
+}
+function renderBrandLogo(brand, cls='brand-logo', alt=brand.name){
+  const logo = (brand.logo || '').trim();
+  const fallback = escapeHtml(brand.emoji || '🍽️');
+  if(!logo) return `<div class="${cls}">${fallback}</div>`;
+  if(/^https?:\/\//.test(logo) || logo.startsWith('data:')){
+    return `<div class="${cls}"><img src="${escapeHtml(logo)}" alt="${escapeHtml(alt)}"></div>`;
+  }
+  return `<div class="${cls}">${escapeHtml(logo)}</div>`;
+}
+function discountPercent(originalPrice, salePrice){
+  const op = Number(originalPrice);
+  const sp = Number(salePrice);
+  if(!op || !sp || op <= sp) return 0;
+  return Math.max(1, Math.round(((op - sp) / op) * 100));
+}
+function productPromoLabel(p){
+  if(p?.featured) return 'Günün Ürünü';
+  const campaign = (p?.campaign || '').trim();
+  if(campaign) return campaign;
+  const pct = discountPercent(p?.originalPrice, p?.price);
+  return pct > 0 ? `%${pct} indirim` : '';
+}
+const ROLE_PERMISSION_PRESETS = {
+  'Restaurant Owner': ['manage_branches','manage_menu','manage_campaigns','manage_staff','view_analytics','manage_theme'],
+  'Branch Manager': ['manage_menu','manage_campaigns','view_analytics'],
+  'Garson': ['view_menu','manage_table_notes'],
+  'Kasiyer': ['view_menu','manage_payments']
+};
+const PERMISSION_LABELS = {
+  manage_branches:'Şube yönetimi',
+  manage_menu:'Menü yönetimi',
+  manage_campaigns:'Kampanya yönetimi',
+  manage_staff:'Yetkili hesaplar',
+  view_analytics:'Analitik görüntüleme',
+  manage_theme:'Tema / logo',
+  view_menu:'Menü görüntüleme',
+  manage_table_notes:'Masa notları',
+  manage_payments:'Tahsilat'
+};
+const PERMISSION_ORDER = ['manage_branches','manage_menu','manage_campaigns','manage_staff','view_analytics','manage_theme','view_menu','manage_table_notes','manage_payments'];
+function defaultPermissionsForRole(role){
+  return [...(ROLE_PERMISSION_PRESETS[role] || [])];
+}
+function permissionLabel(key){ return PERMISSION_LABELS[key] || key; }
+function permissionBadges(perms){
+  const list = (perms || []).map(permissionLabel);
+  return list.length ? list.map(p=>`<span class="badge badge-line">${p}</span>`).join('') : '<span class="muted">İzin yok</span>';
+}
+function hasPermission(person, perm){
+  return Array.isArray(person?.permissions) && person.permissions.includes(perm);
+}
+function parseTimeToMinutes(text){
+  const m = String(text || '').trim().match(/^(\d{1,2}):(\d{2})$/);
+  if(!m) return null;
+  const h = Math.max(0, Math.min(23, parseInt(m[1], 10)));
+  const min = Math.max(0, Math.min(59, parseInt(m[2], 10)));
+  return h * 60 + min;
+}
+function parseCampaignWindow(text){
+  if(!text) return null;
+  const raw = String(text).replace(/–/g,'-').replace(/\s+/g,'').trim();
+  const parts = raw.split('-');
+  if(parts.length !== 2) return null;
+  const start = parseTimeToMinutes(parts[0]);
+  const end = parseTimeToMinutes(parts[1]);
+  if(start === null || end === null) return null;
+  return {start, end};
+}
+function minutesNow(){
+  const now = new Date();
+  return now.getHours() * 60 + now.getMinutes();
+}
+function isCampaignActiveNow(campaign, mins){
+  if(!campaign || campaign.active === false) return false;
+  const window = parseCampaignWindow(campaign.window);
+  if(!window) return true;
+  if(window.start === window.end) return true;
+  if(window.start < window.end) return mins >= window.start && mins < window.end;
+  return mins >= window.start || mins < window.end;
+}
+function currentCampaigns(branch){
+  const now = minutesNow();
+  return branch.campaigns.filter(c => isCampaignActiveNow(c, now));
+}
+function campaignKey(branchKey, campaign){
+  return branchKey + '::' + (campaign.window || campaign.name);
+}
+function campaignWindowLabel(campaign){
+  return campaign.window ? campaign.window.replace('-', ' – ') : 'Tüm gün';
+}
+function campaignBannerText(campaign, count, index){
+  const prefix = count > 1 ? `${index + 1}/${count} · ` : '';
+  return `${prefix}${campaign.name} — ${campaign.detail}${campaign.window ? ` · ${campaignWindowLabel(campaign)}` : ''}`;
+}
+function dismissCampaignPopup(){
+  UI.activeCampaignPopup = null;
+  render();
+}
+function renderCampaignPopup(){
+  const popup = UI.activeCampaignPopup;
+  if(!popup) return '';
+  const brand = findBrand(popup.bs);
+  const branch = findBranch(brand, popup.brs);
+  if(!brand || !branch) return '';
+  const campaign = branch.campaigns[popup.idx];
+  if(!campaign) return '';
+  return `
+  <div class="campaign-popup" style="--brand-accent:${brand.accent};" onclick="if(event.target===this) dismissCampaignPopup()">
+    <div class="campaign-popup-card">
+      <button class="campaign-popup-close" onclick="dismissCampaignPopup()">✕</button>
+      <span class="campaign-popup-eyebrow">Sınırlı zamanlı kampanya</span>
+      <h3>${campaign.name}</h3>
+      <p>${campaign.detail}</p>
+      <div class="campaign-popup-meta">
+        <span class="badge badge-dark">${brand.name}</span>
+        <span class="badge badge-dark">${branch.name}</span>
+        <span class="badge badge-gold">${campaignWindowLabel(campaign)}</span>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-gold btn-sm" onclick="dismissCampaignPopup()">Menüye Dön</button>
+      </div>
+    </div>
+  </div>`;
+}
+function campaignTickerHtml(campaigns, key){
+  if(!campaigns.length) return '';
+  const items = campaigns.map((campaign, idx)=>`
+    <span class="campaign-banner-item">
+      <span class="campaign-banner-dot"></span>
+      <span>${campaignBannerText(campaign, campaigns.length, idx)}</span>
+    </span>`).join('');
+  return `
+    <div class="campaign-banner">
+      <div class="page">
+        <div class="campaign-banner-shell">
+          <span class="campaign-banner-label">📣 Kampanyalar</span>
+          <div class="campaign-banner-track-wrap">
+            <div class="campaign-banner-track">
+              ${items}
+              ${items}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+function syncCampaignExperience(){
+  const raw = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+  const segs = raw.split('/').filter(Boolean);
+  if(!(segs.length === 2)){
+    UI.activeCampaignPopup = null;
+    UI.campaignPopupRouteKey = '';
+    return;
+  }
+  const brand = findBrand(segs[0]);
+  const branch = findBranch(brand, segs[1]);
+  if(!brand || !branch){
+    UI.activeCampaignPopup = null;
+    UI.campaignPopupRouteKey = '';
+    return;
+  }
+  const key = branchKey(segs[0], segs[1]);
+  const campaigns = currentCampaigns(branch);
+  const bannerHost = document.getElementById('campaignBannerHost');
+  if(bannerHost){
+    bannerHost.innerHTML = campaignTickerHtml(campaigns, key);
+  }
+  if(!UI.activeProduct){
+    if(UI.campaignPopupRouteKey !== key){
+      const eligiblePopup = campaigns.find(c => c.popup !== false);
+      if(eligiblePopup){
+        UI.activeCampaignPopup = {bs: segs[0], brs: segs[1], idx: branch.campaigns.indexOf(eligiblePopup)};
+        UI.campaignPopupRouteKey = key;
+        UI.campaignPopupSeen[campaignKey(key, eligiblePopup)] = eligiblePopup.window || 'all-day';
+      } else {
+        UI.activeCampaignPopup = null;
+        UI.campaignPopupRouteKey = key;
+      }
+    }
+  }
+}
+function startCampaignTicker(){
+  if(window.__campaignTickerStarted) return;
+  window.__campaignTickerStarted = true;
+  setInterval(()=>syncCampaignExperience(), 3500);
+}
+
+/* =========================================================
+   ROUTE BAR
+========================================================= */
+function routeBar(segs){
+  return `
+  <div class="route-bar">
+    <div class="route-bar-controls">
+      <button class="rb-btn" onclick="history.back()" title="Geri">&larr;</button>
+      <button class="rb-btn" onclick="history.forward()" title="İleri">&rarr;</button>
+    </div>
+    <div class="route-bar-url">
+      <span class="rb-lock">&#128274;</span>
+      <span class="rb-domain">anlikmenu.com</span><span class="rb-path">${segs.length ? '/'+segs.join('/') : ''}</span>
+    </div>
+    <a href="#/" class="rb-home" title="Platform Ana Sayfası">&#8962;</a>
+  </div>`;
+}
+
+/* =========================================================
+   HOME
+========================================================= */
+function brandCardsHtml(){
+  const q = UI.homeQuery.trim().toLowerCase();
+  const cat = UI.homeCategory;
+  const list = BRANDS.filter(b=>{
+    const matchQ = !q || b.name.toLowerCase().includes(q) || b.category.toLowerCase().includes(q);
+    const matchC = cat==='Tümü' || b.category===cat;
+    return matchQ && matchC;
+  });
+  if(!list.length) return `<div class="empty-state">Aramanla eşleşen bir marka bulunamadı.<br>Farklı bir anahtar kelime dene.</div>`;
+  return `<div class="grid">${list.map(b=>`
+    <a class="brand-card" href="#/${b.slug}/${b.branches[0] ? b.branches[0].slug : ''}">
+      ${renderBrandLogo(b, 'brand-logo')}
+      <div>
+        <span class="cat">${b.category}</span>
+        <h3>${b.name}</h3>
+      </div>
+      <p class="tag">${b.tagline}</p>
+      <div class="brand-card-foot">
+        <span class="badge badge-dark">${b.branches.length} şube</span>
+        <span class="badge badge-gold">Temaya Gir →</span>
+      </div>
+    </a>`).join('')}</div>`;
+}
+function onHomeSearch(v){ UI.homeQuery=v; document.getElementById('brandGrid').innerHTML = brandCardsHtml(); }
+function onHomeCategory(c){ UI.homeCategory=c; render(); }
+
+function renderHome(){
+  return `
+  <section class="hero-chalk">
+    <div class="page">
+      <div class="hero-grid">
+        <div>
+          <span class="eyebrow">Anlık Menü Platformu</span>
+          <h1 class="hero-title">Restoranınızın <em>canlı</em> dijital menüsü, tek panelden.</h1>
+          <p class="hero-sub">Kafe, restoran ve markaları keşfedin — her şube kendi QR menüsü, kampanyaları ve yönetim paneli ile yayında.</p>
+          <div class="hero-summary">
+            <span class="badge badge-gold">${BRANDS.length} marka</span>
+            <span class="badge badge-dark">${BRANDS.reduce((s,b)=>s+b.branches.length,0)} aktif şube</span>
+            <span class="badge badge-dark">QR menü + admin akışı</span>
+          </div>
+          <div class="search-row">
+            <input class="search-box" placeholder="Marka veya mutfak ara — örn. “kebap”, “deniz”" value="${UI.homeQuery}" oninput="onHomeSearch(this.value)">
+            <a href="#/Admin" class="btn btn-outline">Platform Yönetimi</a>
+          </div>
+          <div class="chips">
+            ${CATEGORY_LIST.map(c=>`<button class="chip ${c===UI.homeCategory?'active':''}" onclick="onHomeCategory('${c}')">${c}</button>`).join('')}
+          </div>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-card">
+            <span>Ortalama menü açılış süresi</span>
+            <strong>1.2 sn</strong>
+          </div>
+          <div class="stat-card">
+            <span>Mobil kullanım oranı</span>
+            <strong>%86</strong>
+          </div>
+          <div class="stat-card">
+            <span>Aktif kampanya örneği</span>
+            <strong>3</strong>
+          </div>
+          <div class="stat-card">
+            <span>Rol bazlı panel</span>
+            <strong>3 katman</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="dark section">
+    <div class="page">
+      <div class="section-head">
+        <div class="section-title">
+          <span class="section-subtitle">Keşfet</span>
+          <h2 style="color:var(--chalk)">Öne Çıkan Markalar</h2>
+        </div>
+        <span class="muted">${BRANDS.length} marka · ${BRANDS.reduce((s,b)=>s+b.branches.length,0)} şube yayında</span>
+      </div>
+      <div id="brandGrid">${brandCardsHtml()}</div>
+    </div>
+  </section>
+  ${footerHtml()}`;
+}
+
+/* =========================================================
+   BRAND PAGE
+========================================================= */
+function renderBrandPage(slug){
+  const b = findBrand(slug);
+  if(!b) return renderNotFound();
+  return `
+  <section class="brand-hero dark" style="--brand-accent:${b.accent};">
+    <div class="page">
+      <a class="back-link" href="#/">&larr; Tüm Markalar</a>
+      <div class="brand-hero-top">
+        ${renderBrandLogo(b, 'brand-hero-icon')}
+        <div>
+          <span class="section-subtitle">${b.category}</span>
+          <h1 style="color:var(--chalk);font-size:34px;">${b.name}</h1>
+        </div>
+      </div>
+      <p class="hero-sub" style="margin-top:14px;">${b.tagline}</p>
+      <div class="branch-meta">
+        <span class="badge badge-dark">${b.branches.length} şube</span>
+        <span class="badge badge-dark">${b.branches.reduce((s,br)=>s+br.categories.reduce((a,c)=>a+c.products.length,0),0)} ürün</span>
+        <span class="badge badge-dark">Marka rengi aktif</span>
+      </div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="page">
+      <div class="section-head">
+        <div class="section-title">
+          <span class="section-subtitle">Konumlar</span>
+          <h2>Şubeler</h2>
+        </div>
+        <span class="muted">${b.branches.length} aktif konum</span>
+      </div>
+      <div class="branch-list">
+        ${b.branches.map(br=>`
+          <div class="branch-card">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <h4>${br.name}</h4>
+              <span class="badge ${br.status==='open'?'badge-open':'badge-closed'}">${br.status==='open'?'Açık':'Kapalı'}</span>
+            </div>
+            <p class="addr">${br.address}<br>${br.hours}</p>
+            <div class="branch-card-foot">
+              <span class="badge badge-line">${br.categories.reduce((s,c)=>s+c.products.length,0)} ürün</span>
+              <a class="btn btn-gold btn-sm" href="#/${b.slug}/${br.slug}">QR Menüyü Gör</a>
+            </div>
+          </div>`).join('')}
+      </div>
+      <div style="margin-top:30px;">
+        <a href="#/${b.slug}/Admin" class="btn btn-outline-paper btn-sm">Restoran Sahibi Girişi →</a>
+      </div>
+    </div>
+  </section>
+  ${footerHtml()}`;
+}
+
+/* =========================================================
+   BRANCH PAGE — QR MENU
+========================================================= */
+function branchKey(bs,brs){ return bs+'::'+brs; }
+
+function productsHtml(brand, branch){
+  const key = branchKey(brand.slug, branch.slug);
+  const activeCat = UI.activeTab[key] || 'Tümü';
+  const q = (UI.menuQuery[key]||'').trim().toLowerCase();
+  function priceMarkup(p){
+    const sale = fmt(p.price);
+    const original = p.originalPrice && p.originalPrice > p.price ? fmt(p.originalPrice) : '';
+    const pct = discountPercent(p.originalPrice, p.price);
+    return original ? `<span style="display:flex;flex-direction:column;align-items:flex-start;line-height:1.05;gap:2px;"><span style="font-size:12px;color:#8b8570;text-decoration:line-through;">${original}</span><span class="price">${sale}</span>${pct ? `<span class="badge badge-gold" style="margin-top:2px;">%${pct} indirim</span>` : ''}</span>` : `<span class="price">${sale}</span>`;
+  }
+  const renderCard = (p, ci, pi) => `
+    <div class="product-card" onclick="openProduct('${brand.slug}','${branch.slug}',${ci},${pi})">
+      <div class="product-thumb">${p.image ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}">` : (p.emoji||brand.emoji)}</div>
+      <div class="product-body">
+        <div style="display:flex;justify-content:space-between;gap:8px;">
+          <h4>${p.name}</h4>
+          ${productPromoLabel(p) ? `<span class="badge badge-gold" style="white-space:nowrap;">${productPromoLabel(p)}</span>` : ''}
+        </div>
+        <p class="desc">${p.desc}</p>
+        <div class="allergen-row">
+          ${p.allergens.map(a=>`<span class="badge badge-line">${a}</span>`).join('')}
+          <span class="badge badge-line">${p.kcal} kcal</span>
+        </div>
+        <div class="product-foot">
+          ${priceMarkup(p)}
+          <span class="muted" style="font-size:12px;">Detay →</span>
+        </div>
+      </div>
+    </div>`;
+  let sections = [];
+  branch.categories.forEach((c,ci)=>{
+    if(activeCat !== 'Tümü' && c.name!==activeCat) return;
+    const cards = c.products.flatMap((p,pi)=>{
+      if(q && !p.name.toLowerCase().includes(q)) return [];
+      return [renderCard(p,ci,pi)];
+    });
+    if(!cards.length) return;
+    sections.push(`
+      <div class="menu-category-block">
+        <div class="menu-category-head">
+          <div class="section-title">
+            <span class="section-subtitle">${c.name}</span>
+            <h3>${c.name}</h3>
+          </div>
+          <span class="badge badge-line">${cards.length} ürün</span>
+        </div>
+        <div class="product-grid">${cards.join('')}</div>
+      </div>`);
+  });
+  if(!sections.length) return `<div class="empty-state"><strong>Sonuç bulunamadı</strong>Bu kategoride aramanla eşleşen ürün yok.</div>`;
+  return sections.join('');
+}
+
+function onTab(bs,brs,name){ UI.activeTab[branchKey(bs,brs)] = name; render(); }
+function onMenuSearch(bs,brs,v){
+  UI.menuQuery[branchKey(bs,brs)] = v;
+  const brand = findBrand(bs), branch = findBranch(brand,brs);
+  document.getElementById('productArea').innerHTML = productsHtml(brand, branch);
+}
+
+function renderBranchPage(bs,brs){
+  const brand = findBrand(bs); const branch = findBranch(brand,brs);
+  if(!brand || !branch) return renderNotFound();
+  const key = branchKey(bs,brs);
+  const activeCat = UI.activeTab[key] || 'Tümü';
+  const totalProducts = branch.categories.reduce((s,c)=>s+c.products.length,0);
+  const allTabCount = totalProducts;
+  return `
+  <div class="branch-scope" style="--brand-accent:${brand.accent};">
+    <div id="campaignBannerHost"></div>
+    <div class="branch-topbar">
+      <div class="page">
+        <div class="branch-header-row">
+          <div>
+            <a class="back-link" href="#/${brand.slug}">&larr; ${brand.name}</a>
+            <div class="section-title" style="margin-bottom:6px;">
+              <span class="section-subtitle">QR Menü</span>
+              <h2>${brand.name} · ${branch.name}</h2>
+            </div>
+            <div class="branch-quickinfo">
+              <span class="badge ${branch.status==='open'?'badge-open':'badge-closed'}">${branch.status==='open'?'Açık':'Kapalı'}</span>
+              <span class="badge badge-dark">${branch.hours}</span>
+              <span class="badge badge-dark">${totalProducts} ürün</span>
+              <span class="badge badge-dark">${branch.categories.length} kategori</span>
+            </div>
+          </div>
+          <div class="branch-quickinfo" style="margin-top:0;">
+            <button class="btn btn-outline btn-sm btn-disabled" onclick="notify('Bu özellik doğrulanmış masa oturumu (NFC) gerektirir — v2.0')">🔔 Garson</button>
+            <button class="btn btn-outline btn-sm btn-disabled" onclick="notify('Bu özellik doğrulanmış masa oturumu (NFC) gerektirir — v2.0')">🧾 Hesap</button>
+          </div>
+        </div>
+        <input class="menu-search" placeholder="Menüde ara…" value="${UI.menuQuery[key]||''}" oninput="onMenuSearch('${bs}','${brs}',this.value)">
+        <div class="tabs">
+          <button class="tab ${activeCat==='Tümü'?'active':''}" onclick="onTab('${bs}','${brs}','Tümü')">Tümü <span class="muted">(${allTabCount})</span></button>
+          ${branch.categories.map(c=>`<button class="tab ${c.name===activeCat?'active':''}" onclick="onTab('${bs}','${brs}','${c.name}')">${c.name} <span class="muted">(${c.products.length})</span></button>`).join('')}
+        </div>
+      </div>
+    </div>
+    <div class="page" id="productArea">${productsHtml(brand,branch)}</div>
+  </div>
+  ${footerHtml()}`;
+}
+
+/* ---- product modal ---- */
+function openProduct(bs,brs,ci,pi){ UI.activeProduct = {bs,brs,ci,pi}; render(); }
+function closeProduct(){ UI.activeProduct = null; render(); }
+function renderProductModal(){
+  const {bs,brs,ci,pi} = UI.activeProduct;
+  const brand = findBrand(bs), branch = findBranch(brand,brs);
+  const p = branch.categories[ci].products[pi];
+  const priceHtml = p.originalPrice && p.originalPrice > p.price
+    ? `<div class="detail-row"><span>Normal Fiyat</span><span style="text-decoration:line-through;color:#8b8570;">${fmt(p.originalPrice)}</span></div>
+       <div class="detail-row"><span>İndirimli Fiyat</span><strong>${fmt(p.price)}</strong></div>
+       <div class="detail-row"><span>İndirim Oranı</span><span class="badge badge-gold">%${discountPercent(p.originalPrice, p.price)}</span></div>`
+    : `<div class="detail-row"><span>Fiyat</span><strong>${fmt(p.price)}</strong></div>`;
+  return `
+  <div class="modal-overlay" onclick="if(event.target===this) closeProduct()">
+    <div class="modal modal-rel">
+      <button class="modal-close" onclick="closeProduct()">✕</button>
+      <div class="modal-hero">${p.image ? `<img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" style="width:100%;height:100%;object-fit:cover;display:block;">` : (p.emoji||brand.emoji)}</div>
+      <div class="modal-body">
+        ${productPromoLabel(p) ? `<span class="badge badge-gold" style="margin-bottom:8px;">${productPromoLabel(p)}</span>` : ''}
+        <h3 style="font-size:21px;">${p.name}</h3>
+        <p class="muted" style="color:#6b6656;margin-top:8px;font-size:13.5px;line-height:1.5;">${p.desc}</p>
+        ${(p.campaignStart || p.campaignEnd) ? `<div style="margin-top:10px;" class="detail-row"><span>Kampanya Süresi</span><span>${p.campaignStart || '—'} ${p.campaignEnd ? '→ ' + p.campaignEnd : ''}</span></div>` : ''}
+        <div class="modal-grid" style="margin-top:16px;">
+          ${priceHtml}
+          <div class="detail-row"><span>Kalori</span><span>${p.kcal} kcal</span></div>
+          <div class="detail-row"><span>Alerjenler</span><span>${p.allergens.join(', ')}</span></div>
+          <div class="detail-row"><span>Kategori</span><span>${branch.categories[ci].name}</span></div>
+          <div class="detail-row"><span>Şube</span><span>${branch.name}</span></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* =========================================================
+   BRANCH ADMIN
+========================================================= */
+function setAdminTab(t){ UI.adminTab=t; UI.showAddProduct=false; render(); }
+
+function branchAdminSidebar(bs,brs,active){
+  const items = [['overview','Genel Bakış'],['categories','Kategoriler'],['products','Ürünler'],['campaigns','Kampanyalar']];
+  return `<div class="sidebar">
+    ${items.map(([id,label])=>`<a class="sidebar-item ${active===id?'active':''}" href="javascript:void(0)" onclick="setAdminTab('${id}')">${label}</a>`).join('')}
+    <a class="sidebar-item" href="#/${bs}/${brs}" style="margin-top:8px;border-top:1px solid var(--paper-line);padding-top:12px;">↗ Public Menüyü Gör</a>
+  </div>`;
+}
+
+function overviewPanel(branch){
+  const kpis = [
+    ['Günlük QR Okutma', '312', '+8% dün', 'kpi-up'],
+    ['En Çok Görüntülenen Ürün', branch.categories[1] ? branch.categories[1].products[0].name : '—', 'Son 7 gün', ''],
+    ['Ortalama Oturum Süresi', '2dk 14sn', '+12sn', 'kpi-up'],
+    ['Bounce Rate', '%18', '-3% dün', 'kpi-up']
+  ];
+  return `<div class="kpi-row">
+    ${kpis.map(k=>`<div class="kpi-card"><div class="kpi-label">${k[0]}</div><div class="kpi-value">${k[1]}</div><div class="kpi-trend ${k[3]}">${k[2]}</div></div>`).join('')}
+  </div>
+  <div class="panel">
+    <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">Genel Bakış</span><h3>Şube Bilgisi</h3></div></div>
+    <div class="detail-row"><span>Adres</span><span>${branch.address}</span></div>
+    <div class="detail-row"><span>Çalışma Saatleri</span><span>${branch.hours}</span></div>
+    <div class="detail-row"><span>Durum</span><span class="badge ${branch.status==='open'?'badge-open':'badge-closed'}">${branch.status==='open'?'Açık':'Kapalı'}</span></div>
+    <div class="detail-row"><span>Toplam Ürün</span><span>${branch.categories.reduce((s,c)=>s+c.products.length,0)}</span></div>
+  </div>`;
+}
+
+function addCategory(bs,brs){
+  const name = prompt('Yeni kategori adı:');
+  if(!name) return;
+  const branch = findBranch(findBrand(bs),brs);
+  branch.categories.push({name, products:[]});
+  UI.toast='Kategori eklendi: '+name; render();
+}
+function deleteCategory(bs,brs,ci){
+  const branch = findBranch(findBrand(bs),brs);
+  if(branch.categories.length<=1){ UI.toast='En az bir kategori kalmalı.'; render(); return; }
+  branch.categories.splice(ci,1); UI.toast='Kategori silindi.'; render();
+}
+function categoriesPanel(bs,brs,branch){
+  return `<div class="panel">
+    <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">Menü yapısı</span><h3>Kategoriler</h3></div><button class="btn btn-gold btn-sm" onclick="addCategory('${bs}','${brs}')">+ Kategori Ekle</button></div>
+    <table>
+      <tr><th>Kategori</th><th>Ürün Sayısı</th><th></th></tr>
+      ${branch.categories.map((c,ci)=>`
+        <tr><td>${c.name}</td><td>${c.products.length}</td>
+        <td class="row-actions"><button class="btn btn-outline-paper btn-sm" onclick="deleteCategory('${bs}','${brs}',${ci})">Sil</button></td></tr>`).join('')}
+    </table>
+  </div>`;
+}
+
+function resetProductForm(bs,brs){
+  const brand = findBrand(bs);
+  const branch = findBranch(brand, brs);
+  UI.productForm = {
+    mode:'create',
+    bs,
+    brs,
+    ci:null,
+    pi:null,
+    name:'',
+    price:'',
+    originalPrice:'',
+    category:branch && branch.categories[0] ? branch.categories[0].name : '',
+    kcal:'',
+    allergens:'',
+    desc:'',
+    emoji:'🍽️',
+    campaignLabel:'',
+    campaignStart:'',
+    campaignEnd:'',
+    featured:false,
+    image:'',
+    imageType:'url'
+  };
+}
+function toggleAddProduct(bs,brs){
+  if(UI.showAddProduct){
+    UI.showAddProduct=false;
+  } else {
+    resetProductForm(bs, brs);
+    UI.showAddProduct=true;
+  }
+  render();
+}
+function openEditProduct(bs,brs,ci,pi){
+  const brand = findBrand(bs);
+  const branch = findBranch(brand,brs);
+  const p = branch.categories[ci].products[pi];
+  UI.productForm = {
+    mode:'edit',
+    bs,
+    brs,
+    ci,
+    pi,
+    name:p.name || '',
+    price:String(p.price ?? ''),
+    originalPrice:String(p.originalPrice ?? ''),
+    category:branch.categories[ci].name,
+    kcal:String(p.kcal ?? ''),
+    allergens:(p.allergens || []).join(', '),
+    desc:p.desc || '',
+    emoji:p.emoji || brand.emoji || '🍽️',
+    campaignLabel:p.campaign || '',
+    campaignStart:p.campaignStart || '',
+    campaignEnd:p.campaignEnd || '',
+    featured:!!p.featured,
+    image:p.image || '',
+    imageType:(p.image && /^https?:\/\//.test(p.image)) ? 'url' : 'url'
+  };
+  UI.showAddProduct=true;
+  render();
+}
+function cancelProductForm(){ UI.showAddProduct=false; render(); }
+function productFormField(k,v){ UI.productForm[k] = v; }
+function handleProductImageFile(input){
+  const file = input.files && input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    UI.productForm.image = String(reader.result || '');
+    UI.productForm.imageType = 'file';
+    render();
+  };
+  reader.readAsDataURL(file);
+}
+function submitNewProduct(bs,brs){
+  const branch = findBranch(findBrand(bs),brs);
+  const f = UI.productForm;
+  const name = (f.name || '').trim();
+  const price = parseFloat(f.price)||0;
+  const originalPrice = parseFloat(f.originalPrice)||0;
+  const catName = (f.category || '').trim();
+  const kcal = parseInt(f.kcal)||0;
+  const allergens = (f.allergens || '').trim();
+  const desc = (f.desc || '').trim() || 'Yeni eklenen ürün.';
+  const campaignStart = (f.campaignStart || '').trim();
+  const campaignEnd = (f.campaignEnd || '').trim();
+  if(!name || !price){ UI.toast='Ürün adı ve fiyat zorunlu.'; render(); return; }
+  const cat = branch.categories.find(c=>c.name===catName) || branch.categories[0];
+  const payload = {
+    id: slugify(name)+Date.now(),
+    emoji: f.emoji || '🍽️',
+    name,
+    price,
+    originalPrice: originalPrice > 0 ? originalPrice : price,
+    kcal,
+    allergens: allergens ? allergens.split(',').map(s=>s.trim()) : ['—'],
+    desc,
+    campaign: (f.campaignLabel || '').trim(),
+    campaignStart,
+    campaignEnd,
+    featured: !!f.featured,
+    image: f.image || ''
+  };
+  cat.products.push(payload);
+  UI.showAddProduct=false;
+  UI.productForm = {mode:'create', bs:'', brs:'', ci:null, pi:null, name:'', price:'', originalPrice:'', category:'', kcal:'', allergens:'', desc:'', emoji:'🍽️', campaignLabel:'', campaignStart:'', campaignEnd:'', featured:false, image:'', imageType:'url'};
+  UI.toast='Ürün eklendi: '+name;
+  render();
+}
+function updateProduct(bs,brs,ci,pi){
+  const branch = findBranch(findBrand(bs),brs);
+  const f = UI.productForm;
+  const name = (f.name || '').trim();
+  const price = parseFloat(f.price)||0;
+  const originalPrice = parseFloat(f.originalPrice)||0;
+  const catName = (f.category || '').trim();
+  const kcal = parseInt(f.kcal)||0;
+  const allergens = (f.allergens || '').trim();
+  const desc = (f.desc || '').trim() || 'Ürün açıklaması.';
+  const campaignStart = (f.campaignStart || '').trim();
+  const campaignEnd = (f.campaignEnd || '').trim();
+  if(!name || !price){ UI.toast='Ürün adı ve fiyat zorunlu.'; render(); return; }
+  const current = branch.categories[ci].products[pi];
+  const targetCatIndex = branch.categories.findIndex(c=>c.name===catName);
+  const nextCatIndex = targetCatIndex >= 0 ? targetCatIndex : ci;
+  const updated = {
+    ...current,
+    emoji: f.emoji || current.emoji || '🍽️',
+    name,
+    price,
+    originalPrice: originalPrice > 0 ? originalPrice : (current.originalPrice || price),
+    kcal,
+    allergens: allergens ? allergens.split(',').map(s=>s.trim()) : ['—'],
+    desc,
+    campaign: (f.campaignLabel || '').trim(),
+    campaignStart,
+    campaignEnd,
+    featured: !!f.featured,
+    image: f.image || ''
+  };
+  if(nextCatIndex === ci){
+    branch.categories[ci].products[pi] = updated;
+  } else {
+    branch.categories[ci].products.splice(pi,1);
+    branch.categories[nextCatIndex].products.push(updated);
+  }
+  UI.showAddProduct=false;
+  UI.productForm = {mode:'create', bs:'', brs:'', ci:null, pi:null, name:'', price:'', originalPrice:'', category:'', kcal:'', allergens:'', desc:'', emoji:'🍽️', campaignLabel:'', campaignStart:'', campaignEnd:'', featured:false, image:'', imageType:'url'};
+  UI.toast='Ürün güncellendi: '+name;
+  render();
+}
+function deleteProduct(bs,brs,ci,pi){
+  const branch = findBranch(findBrand(bs),brs);
+  branch.categories[ci].products.splice(pi,1);
+  UI.toast='Ürün silindi.'; render();
+}
+function productsPanel(bs,brs,branch){
+  let rows = [];
+  const priceCell = (p) => {
+    if(p.originalPrice && p.originalPrice > p.price){
+      const pct = discountPercent(p.originalPrice, p.price);
+      return `<span style="display:flex;flex-direction:column;line-height:1.05;gap:2px;">
+        <span style="font-size:11.5px;color:#8b8570;text-decoration:line-through;">${fmt(p.originalPrice)}</span>
+        <span>${fmt(p.price)}</span>
+        ${pct ? `<span class="badge badge-gold" style="margin-top:2px;align-self:flex-start;">%${pct} indirim</span>` : ''}
+      </span>`;
+    }
+    return fmt(p.price);
+  };
+  branch.categories.forEach((c,ci)=>c.products.forEach((p,pi)=>{
+    rows.push(`<tr>
+      <td>${p.image ? '🖼️' : (p.emoji||'')} ${p.name}</td><td>${c.name}</td><td>${priceCell(p)}</td><td>${p.allergens.join(', ')}</td><td>${p.kcal} kcal</td>
+      <td class="row-actions">
+        <button class="btn btn-outline-paper btn-sm" onclick="openEditProduct('${bs}','${brs}',${ci},${pi})">Düzenle</button>
+        <button class="btn btn-outline-paper btn-sm" onclick="deleteProduct('${bs}','${brs}',${ci},${pi})">Sil</button>
+      </td>
+    </tr>`);
+  }));
+  return `<div class="panel">
+    <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">İçerik yönetimi</span><h3>Ürünler</h3></div><button class="btn btn-gold btn-sm" onclick="toggleAddProduct('${bs}','${brs}')">${UI.showAddProduct?'Vazgeç':'+ Ürün Ekle'}</button></div>
+    ${UI.showAddProduct? `
+    <div class="form-grid" style="margin-bottom:18px;padding:16px;background:var(--paper);border-radius:10px;">
+      <div class="field"><label>Ürün Adı</label><input value="${escapeHtml(UI.productForm.name)}" onchange="productFormField('name', this.value)" placeholder="örn. Mercimek Çorbası"></div>
+      <div class="field"><label>Normal Fiyat (₺)</label><input value="${escapeHtml(UI.productForm.originalPrice)}" onchange="productFormField('originalPrice', this.value)" type="number" placeholder="150"></div>
+      <div class="field"><label>Fiyat (₺)</label><input value="${escapeHtml(UI.productForm.price)}" onchange="productFormField('price', this.value)" type="number" placeholder="120"></div>
+      <div class="field"><label>Kategori</label><select onchange="productFormField('category', this.value)">${branch.categories.map(c=>`<option ${UI.productForm.category===c.name?'selected':''}>${escapeHtml(c.name)}</option>`).join('')}</select></div>
+      <div class="field"><label>Kalori</label><input value="${escapeHtml(UI.productForm.kcal)}" onchange="productFormField('kcal', this.value)" type="number" placeholder="250"></div>
+      <div class="field"><label>Emoji</label><input value="${escapeHtml(UI.productForm.emoji)}" onchange="productFormField('emoji', this.value)" placeholder="🍽️"></div>
+      <div class="field"><label>Kampanya Etiketi</label><input value="${escapeHtml(UI.productForm.campaignLabel)}" onchange="productFormField('campaignLabel', this.value)" placeholder="örn. Günün Menüsü"></div>
+      <div class="field"><label>Kampanya Başlangıç</label><input value="${escapeHtml(UI.productForm.campaignStart)}" onchange="productFormField('campaignStart', this.value)" type="date"></div>
+      <div class="field"><label>Kampanya Bitiş</label><input value="${escapeHtml(UI.productForm.campaignEnd)}" onchange="productFormField('campaignEnd', this.value)" type="date"></div>
+      <div class="field"><label>Görsel URL</label><input value="${UI.productForm.imageType==='url' ? escapeHtml(UI.productForm.image) : ''}" onchange="productFormField('image', this.value); productFormField('imageType','url')" placeholder="https://..."></div>
+      <div class="field" style="grid-column:1/-1;"><label>Görsel Yükle</label><input type="file" accept="image/*" onchange="handleProductImageFile(this)"></div>
+      <div class="field" style="grid-column:1/-1;"><label>Açıklama</label><textarea rows="3" onchange="productFormField('desc', this.value)" placeholder="Kısa ürün açıklaması...">${escapeHtml(UI.productForm.desc)}</textarea></div>
+      <div class="field" style="grid-column:1/-1;">
+        <label style="display:flex;align-items:center;gap:8px;font-weight:600;">
+          <input type="checkbox" ${UI.productForm.featured ? 'checked' : ''} onchange="productFormField('featured', this.checked)">
+          Günün ürünü olarak öne çıkar
+        </label>
+        <p class="muted" style="font-size:12px;color:#6b6656;margin-top:6px;">Bu işaret açıkken kartta “Günün Ürünü” etiketi görünür.</p>
+      </div>
+      <div class="field" style="grid-column:1/-1;"><label>Alerjenler (virgülle ayır)</label><input value="${escapeHtml(UI.productForm.allergens)}" onchange="productFormField('allergens', this.value)" placeholder="Gluten, Süt"></div>
+      <div class="field" style="grid-column:1/-1;"><label>Önizleme</label>
+        <div class="image-preview">${UI.productForm.image ? `<img src="${escapeHtml(UI.productForm.image)}" alt="Ürün görseli">` : 'Henüz görsel seçilmedi'}</div>
+      </div>
+      <div style="grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn btn-gold btn-sm" onclick="${UI.productForm.mode==='edit' ? `updateProduct('${bs}','${brs}',${UI.productForm.ci},${UI.productForm.pi})` : `submitNewProduct('${bs}','${brs}')`}">${UI.productForm.mode==='edit'?'Güncelle':'Kaydet'}</button>
+        <button class="btn btn-outline-paper btn-sm" onclick="cancelProductForm()">İptal</button>
+      </div>
+    </div>` : ''}
+    <table>
+      <tr><th>Ürün</th><th>Kategori</th><th>Fiyat</th><th>Alerjen</th><th>Kalori</th><th></th></tr>
+      ${rows.join('') || '<tr><td colspan="6" class="muted">Henüz ürün yok.</td></tr>'}
+    </table>
+  </div>`;
+}
+
+function toggleCampaign(bs,brs,idx){
+  const branch = findBranch(findBrand(bs),brs);
+  branch.campaigns[idx].active = !branch.campaigns[idx].active;
+  render();
+}
+function addCampaign(bs,brs){
+  const name = prompt('Kampanya adı:'); if(!name) return;
+  const detail = prompt('Kampanya açıklaması:') || '';
+  const window = prompt('Saat aralığı (örn. 11:00-15:00, boş bırakılırsa tüm gün):') || '';
+  const popup = confirm('Bu kampanya popup olarak da gösterilsin mi?');
+  const branch = findBranch(findBrand(bs),brs);
+  branch.campaigns.push({name, detail, active:true, window:window.trim(), popup});
+  UI.toast='Kampanya eklendi: '+name; render();
+}
+function campaignsPanel(bs,brs,branch){
+  return `<div class="panel">
+    <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">Zamanlı içerik</span><h3>Kampanyalar & Duyurular</h3></div><button class="btn btn-gold btn-sm" onclick="addCampaign('${bs}','${brs}')">+ Kampanya Ekle</button></div>
+    ${branch.campaigns.length? branch.campaigns.map((c,idx)=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--paper-line);">
+        <div>
+          <strong>${c.name}</strong>
+          <div class="muted" style="font-size:12.5px;margin-top:2px;">${c.detail}</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;">
+            <span class="badge badge-line">${campaignWindowLabel(c)}</span>
+            <span class="badge badge-line">${c.popup === false ? 'Popup kapalı' : 'Popup açık'}</span>
+          </div>
+        </div>
+        <button class="switch ${c.active?'on':''}" onclick="toggleCampaign('${bs}','${brs}',${idx})"></button>
+      </div>`).join('') : '<div class="empty-state">Henüz kampanya yok. Menüde banner göstermek için bir tane ekle.</div>'}
+  </div>`;
+}
+
+function renderBranchAdmin(bs,brs){
+  const brand = findBrand(bs); const branch = findBranch(brand,brs);
+  if(!brand||!branch) return renderNotFound();
+  let body;
+  if(UI.adminTab==='categories') body = categoriesPanel(bs,brs,branch);
+  else if(UI.adminTab==='products') body = productsPanel(bs,brs,branch);
+  else if(UI.adminTab==='campaigns') body = campaignsPanel(bs,brs,branch);
+  else body = overviewPanel(branch);
+  return `
+  <div class="admin-shell">
+    <div class="admin-header">
+      <div class="page">
+        <div>
+          <span class="eyebrow">${brand.name} · ${branch.name}</span>
+          <h2 style="color:var(--chalk);font-size:23px;">Şube Yönetim Paneli</h2>
+        </div>
+        <span class="role-pill">Görüntülenen rol: Branch Manager</span>
+      </div>
+    </div>
+    <div class="page admin-layout">
+      ${branchAdminSidebar(bs,brs,UI.adminTab)}
+      <div class="admin-main">${body}</div>
+    </div>
+  </div>
+  ${footerHtml()}`;
+}
+
+/* =========================================================
+   OWNER ADMIN (/:slug/Admin)
+========================================================= */
+function pickAccent(bs,color){ findBrand(bs).accent = color; render(); }
+function setBrandLogo(bs){
+  const brand = findBrand(bs);
+  if(!brand) return;
+  const current = brand.logo || brand.emoji || '';
+  const logo = prompt('Logo için emoji veya görsel URL gir:', current);
+  if(logo === null) return;
+  brand.logo = logo.trim();
+  render();
+}
+function ownerStaffField(k, v){
+  UI.ownerStaffForm[k] = v;
+  if(k === 'role'){
+    UI.ownerStaffForm.permissions = defaultPermissionsForRole(v);
+  }
+}
+function ownerTogglePermission(perm){
+  const current = UI.ownerStaffForm.permissions || [];
+  UI.ownerStaffForm.permissions = current.includes(perm)
+    ? current.filter(p => p !== perm)
+    : [...current, perm];
+}
+function ownerAddStaff(bs){
+  const brand = findBrand(bs);
+  if(!brand) return;
+  const f = UI.ownerStaffForm;
+  const name = f.name.trim();
+  const role = f.role.trim() || 'Branch Manager';
+  const branch = f.branch.trim() || (brand.branches[0] ? brand.branches[0].name : '');
+  const permissions = Array.isArray(f.permissions) && f.permissions.length ? [...f.permissions] : defaultPermissionsForRole(role);
+  if(!name){
+    UI.toast = 'Yetkili adı zorunlu.';
+    render();
+    return;
+  }
+  brand.staff = brand.staff || [];
+  brand.staff.push({name, role, branch, permissions});
+  UI.ownerStaffForm = {name:'', role:'Branch Manager', branch:'', permissions:defaultPermissionsForRole('Branch Manager')};
+  UI.toast = 'Yetkili hesap eklendi: ' + name;
+  render();
+}
+function ownerDeleteStaff(bs, idx){
+  const brand = findBrand(bs);
+  if(!brand || !brand.staff) return;
+  brand.staff.splice(idx, 1);
+  UI.toast = 'Yetkili hesap silindi.';
+  render();
+}
+function ownerAddBranch(bs){
+  const name = prompt('Yeni şube adı (örn. Ataşehir):'); if(!name) return;
+  const address = prompt('Adres:') || '—';
+  const brand = findBrand(bs);
+  brand.branches.push({slug:slugify(name), name, address, hours:'10:00 – 22:00', status:'open', categories:cloneCats(MENU_TEMPLATES.general), campaigns:[]});
+  UI.toast='Şube eklendi: '+name; render();
+}
+function renderOwnerAdmin(bs){
+  const brand = findBrand(bs);
+  if(!brand) return renderNotFound();
+  const swatchColors = ['#C1432B','#2E6E8E','#7A8F3F','#B9822C','#8E4E9E','#3F6B8F'];
+  return `
+  <div class="admin-shell">
+    <div class="admin-header">
+      <div class="page">
+        <div>
+          <span class="eyebrow">${brand.name}</span>
+          <h2 style="color:var(--chalk);font-size:23px;">Restoran Sahibi Paneli</h2>
+        </div>
+        <span class="role-pill">Görüntülenen rol: Restaurant Owner</span>
+      </div>
+    </div>
+    <div class="page" style="padding:30px 0 70px;">
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">Marka yapısı</span><h3>Şubeler</h3></div><button class="btn btn-gold btn-sm" onclick="ownerAddBranch('${bs}')">+ Şube Ekle</button></div>
+        <table>
+          <tr><th>Şube</th><th>Adres</th><th>Durum</th><th></th></tr>
+          ${brand.branches.map(br=>`
+            <tr><td>${renderBrandLogo(brand, 'brand-logo')} ${br.name}</td><td>${br.address}</td>
+            <td><span class="badge ${br.status==='open'?'badge-open':'badge-closed'}">${br.status==='open'?'Açık':'Kapalı'}</span></td>
+            <td class="row-actions">
+              <a class="btn btn-outline-paper btn-sm" href="#/${bs}/${br.slug}/Admin">Yönet</a>
+              <a class="btn btn-outline-paper btn-sm" href="#/${bs}/${br.slug}">Menü</a>
+            </td></tr>`).join('')}
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">Görsel kimlik</span><h3>Tema / Marka Rengi</h3></div></div>
+        <div class="swatches">
+          ${swatchColors.map(c=>`<button class="swatch ${brand.accent===c?'sel':''}" style="background:${c}" onclick="pickAccent('${bs}','${c}')"></button>`).join('')}
+        </div>
+        <p class="muted" style="margin-top:12px;font-size:12.5px;color:#6b6656;">Seçilen renk, marka ve şube sayfalarındaki vurgu rengini belirler.</p>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">Marka simgesi</span><h3>Logo</h3></div><button class="btn btn-outline-paper btn-sm" onclick="setBrandLogo('${bs}')">Değiştir</button></div>
+        <div style="display:flex;align-items:center;gap:14px;">
+          ${renderBrandLogo(brand, 'brand-hero-icon')}
+          <div>
+            <div style="font-weight:700;">${brand.logo || brand.emoji || '—'}</div>
+            <p class="muted" style="margin-top:4px;font-size:12.5px;color:#6b6656;">Emoji ya da image URL ekleyebilirsin.</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">Erişim yönetimi</span><h3>Yetkili Hesaplar</h3></div></div>
+        <div class="form-grid" style="margin-bottom:18px;padding:16px;background:var(--paper);border-radius:10px;">
+          <div class="field"><label>Ad Soyad</label><input value="${UI.ownerStaffForm.name}" onchange="ownerStaffField('name', this.value)" placeholder="örn. Elif Yılmaz"></div>
+          <div class="field"><label>Rol</label>
+            <select onchange="ownerStaffField('role', this.value)">
+              ${['Restaurant Owner','Branch Manager','Garson','Kasiyer'].map(r=>`<option ${UI.ownerStaffForm.role===r?'selected':''}>${r}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field" style="grid-column:1/-1;"><label>Şube</label>
+            <select onchange="ownerStaffField('branch', this.value)">
+              <option value="">Tüm Şubeler</option>
+              ${brand.branches.map(br=>`<option ${UI.ownerStaffForm.branch===br.name?'selected':''}>${br.name}</option>`).join('')}
+            </select>
+          </div>
+          <div class="field" style="grid-column:1/-1;">
+            <label>İzinler</label>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              ${PERMISSION_ORDER.map(perm=>`
+                <button type="button" class="badge ${UI.ownerStaffForm.permissions.includes(perm)?'badge-gold':'badge-line'}"
+                  style="border:none;cursor:pointer;padding:8px 10px;"
+                  onclick="ownerTogglePermission('${perm}')">${permissionLabel(perm)}</button>`).join('')}
+            </div>
+          </div>
+          <div style="grid-column:1/-1;"><button class="btn btn-gold btn-sm" onclick="ownerAddStaff('${bs}')">Yetkili Ekle</button></div>
+        </div>
+        <table>
+          <tr><th>Ad</th><th>Rol</th><th>Şube</th><th>İzinler</th><th></th></tr>
+          ${(brand.staff || []).map((person, idx)=>`
+            <tr>
+              <td>${person.name}</td>
+              <td>${person.role}</td>
+              <td>${person.branch || 'Tüm Şubeler'}</td>
+              <td>${permissionBadges(person.permissions)}</td>
+              <td class="row-actions"><button class="btn btn-outline-paper btn-sm" onclick="ownerDeleteStaff('${bs}', ${idx})">Sil</button></td>
+            </tr>`).join('') || '<tr><td colspan="5" class="muted">Henüz yetkili hesap yok.</td></tr>'}
+        </table>
+      </div>
+    </div>
+  </div>
+  ${footerHtml()}`;
+}
+
+/* =========================================================
+   PLATFORM ADMIN (/Admin)
+========================================================= */
+function setPlatformTab(t){ UI.adminTab=t; render(); }
+function platformStoresPanel(){
+  return `<div class="panel">
+    <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">Platform geneli</span><h3>Mağazalar</h3></div><span class="muted">${BRANDS.length} marka</span></div>
+    <table>
+      <tr><th>Marka</th><th>Kategori</th><th>Şube</th><th></th></tr>
+      ${BRANDS.map(b=>`
+        <tr><td>${b.emoji} ${b.name}</td><td>${b.category}</td><td>${b.branches.length}</td>
+        <td class="row-actions">
+          <a class="btn btn-outline-paper btn-sm" href="#/${b.slug}/Admin">Yönet</a>
+          <a class="btn btn-outline-paper btn-sm" href="#/${b.slug}">Görüntüle</a>
+        </td></tr>`).join('')}
+    </table>
+  </div>`;
+}
+function wizardGo(step){ UI.wizardStep = step; render(); }
+function wizardField(k,v){ UI.wizardData[k]=v; if(k==='name') UI.wizardData.slug = slugify(v); }
+function wizardCreate(){
+  const d = UI.wizardData;
+  if(!d.name){ UI.toast='Marka adı zorunlu.'; UI.wizardStep=1; render(); return; }
+  const catKey = d.category.includes('Kebap')?'grill' : d.category.includes('Deniz')?'seafood' : d.category.includes('İtalyan')?'italian' : d.category.includes('Kahve')?'cafe':'general';
+  BRANDS.push({
+    slug: d.slug || slugify(d.name)+Date.now(),
+    name: d.name, category: d.category, accent:'#D9A441', emoji:'🏠', logo:d.logo || '🏠', staff:[],
+    tagline: d.tagline || 'Anlık Menü ile yayında.',
+    branches:[{slug:slugify(d.branchName||'merkez')||'merkez', name:d.branchName||'Merkez Şube', address:d.branchAddress||'—', hours:d.branchHours, status:'open', categories:cloneCats(MENU_TEMPLATES[catKey]), campaigns:[]}]
+  });
+  UI.toast = 'Mağaza oluşturuldu: '+d.name;
+  UI.wizardData = {name:'', category:'Izgara & Kebap', tagline:'', logo:'', branchName:'', branchAddress:'', branchHours:'10:00 – 22:00', slug:''};
+  UI.wizardStep = 1; UI.adminTab='stores';
+  render();
+}
+function wizardPanel(){
+  const d = UI.wizardData; const s = UI.wizardStep;
+  const steps = ['Marka Bilgisi','İlk Şube','Domain / Slug','Özet'];
+  let stepBody='';
+  if(s===1){
+    stepBody = `<div class="form-grid">
+      <div class="field"><label>Marka Adı</label><input value="${d.name}" onchange="wizardField('name',this.value)" placeholder="örn. Zeytin Sofrası"></div>
+      <div class="field"><label>Kategori</label><select onchange="wizardField('category',this.value)">
+        ${['Izgara & Kebap','Deniz Mahsulleri','İtalyan','Kahve & Cafe'].map(c=>`<option ${d.category===c?'selected':''}>${c}</option>`).join('')}
+      </select></div>
+      <div class="field" style="grid-column:1/-1;"><label>Tanıtım Cümlesi</label><input value="${d.tagline}" onchange="wizardField('tagline',this.value)" placeholder="Kısa marka sloganı"></div>
+      <div class="field" style="grid-column:1/-1;"><label>Logo / Emoji / Görsel URL</label><input value="${d.logo}" onchange="wizardField('logo',this.value)" placeholder="🍕 veya https://..."></div>
+    </div>`;
+  } else if(s===2){
+    stepBody = `<div class="form-grid">
+      <div class="field"><label>Şube Adı</label><input value="${d.branchName}" onchange="wizardField('branchName',this.value)" placeholder="örn. Kadıköy"></div>
+      <div class="field"><label>Çalışma Saatleri</label><input value="${d.branchHours}" onchange="wizardField('branchHours',this.value)"></div>
+      <div class="field" style="grid-column:1/-1;"><label>Adres</label><input value="${d.branchAddress}" onchange="wizardField('branchAddress',this.value)" placeholder="Mahalle, cadde, no"></div>
+    </div>`;
+  } else if(s===3){
+    stepBody = `<div class="field" style="max-width:360px;">
+      <label>Route Slug (otomatik önerilir, düzenlenebilir)</label>
+      <input value="${d.slug || slugify(d.name)}" onchange="wizardField('slug',this.value)">
+      <p class="muted" style="font-size:12px;color:#8b8570;margin-top:8px;">Sayfa adresi: <span style="font-family:var(--font-mono);color:var(--gold-deep);">anlikmenu.com/${d.slug||slugify(d.name)||'…'}</span></p>
+    </div>`;
+  } else {
+    stepBody = `
+      <div class="detail-row"><span>Marka</span><strong>${d.name||'—'}</strong></div>
+      <div class="detail-row"><span>Kategori</span><span>${d.category}</span></div>
+      <div class="detail-row"><span>Logo</span><span>${d.logo||'—'}</span></div>
+      <div class="detail-row"><span>İlk Şube</span><span>${d.branchName||'Merkez Şube'}</span></div>
+      <div class="detail-row"><span>Adres</span><span>${d.branchAddress||'—'}</span></div>
+      <div class="detail-row"><span>Route</span><span style="font-family:var(--font-mono);">/${d.slug||slugify(d.name)}</span></div>
+      <p class="muted" style="margin-top:14px;font-size:12.5px;color:#6b6656;">Oluştur’a bastığında sistem otomatik olarak marka sayfasını, varsayılan admin alanını ve ilk şube QR menüsünü türetir.</p>
+    `;
+  }
+  return `<div class="panel">
+    <div class="panel-head"><div class="panel-title"><span class="panel-subtitle">Kurulum akışı</span><h3>Yeni Mağaza Ekle</h3></div></div>
+    <div class="wizard-steps">
+      ${steps.map((label,i)=>`<div class="wstep ${i+1===s?'on':(i+1<s?'done':'')}">${i+1}. ${label}</div>`).join('')}
+    </div>
+    ${stepBody}
+    <div style="display:flex;justify-content:space-between;margin-top:22px;">
+      <button class="btn btn-outline-paper btn-sm ${s===1?'btn-disabled':''}" onclick="${s>1?`wizardGo(${s-1})`:''}">← Geri</button>
+      ${s<4 ? `<button class="btn btn-gold btn-sm" onclick="wizardGo(${s+1})">Devam Et →</button>`
+             : `<button class="btn btn-gold btn-sm" onclick="wizardCreate()">Mağazayı Oluştur</button>`}
+    </div>
+  </div>`;
+}
+function renderPlatformAdmin(){
+  return `
+  <div class="admin-shell">
+    <div class="admin-header">
+      <div class="page">
+        <div>
+          <span class="eyebrow">Anlık Menü</span>
+          <h2 style="color:var(--chalk);font-size:23px;">Platform Yönetim Paneli</h2>
+        </div>
+        <span class="role-pill">Görüntülenen rol: Platform Admin</span>
+      </div>
+    </div>
+    <div class="page admin-layout">
+      <div class="sidebar">
+        <a class="sidebar-item ${UI.adminTab!=='wizard'?'active':''}" href="javascript:void(0)" onclick="setPlatformTab('stores')">Mağazalar</a>
+        <a class="sidebar-item ${UI.adminTab==='wizard'?'active':''}" href="javascript:void(0)" onclick="setPlatformTab('wizard')">+ Yeni Mağaza Ekle</a>
+      </div>
+      <div class="admin-main">${UI.adminTab==='wizard' ? wizardPanel() : platformStoresPanel()}</div>
+    </div>
+  </div>
+  ${footerHtml()}`;
+}
+
+/* =========================================================
+   MISC
+========================================================= */
+function notify(msg){ UI.toast = msg; render(); }
+function renderToast(msg){ return `<div class="toast">💬 ${msg}</div>`; }
+function renderNotFound(){
+  return `<div class="page" style="padding:90px 0;text-align:center;">
+    <h2>Sayfa bulunamadı</h2>
+    <p class="muted" style="margin-top:10px;color:#8b8570;">Bu route tanımlı değil.</p>
+    <a class="btn btn-gold" style="margin-top:20px;" href="#/">Ana Sayfaya Dön</a>
+  </div>`;
+}
+function footerHtml(){
+  return `<footer>Anlık Menü — dokümantasyon öncelikli prototip · <a href="#/Admin">Platform Yönetimi</a></footer>`;
+}
+
+/* =========================================================
+   ROUTER
+========================================================= */
+function render(){
+  const app = document.getElementById('app');
+  const raw = decodeURIComponent(location.hash.replace(/^#\/?/, ''));
+  const segs = raw.split('/').filter(Boolean);
+  let html = routeBar(segs);
+  if(segs.length===0) html += renderHome();
+  else if(segs.length===1 && segs[0]==='Admin') html += renderPlatformAdmin();
+  else if(segs.length===1) html += renderBrandPage(segs[0]);
+  else if(segs.length===2 && segs[1]==='Admin') html += renderOwnerAdmin(segs[0]);
+  else if(segs.length===2) html += renderBranchPage(segs[0], segs[1]);
+  else if(segs.length===3 && segs[2]==='Admin') html += renderBranchAdmin(segs[0], segs[1]);
+  else html += renderNotFound();
+  app.innerHTML = html;
+  syncCampaignExperience();
+  if(UI.activeProduct) app.insertAdjacentHTML('beforeend', renderProductModal());
+  if(UI.activeCampaignPopup) app.insertAdjacentHTML('beforeend', renderCampaignPopup());
+  if(UI.toast){ const m=UI.toast; app.insertAdjacentHTML('beforeend', renderToast(m)); setTimeout(()=>{ if(UI.toast===m){UI.toast=null; render();} }, 2400); }
+  window.scrollTo(0,0);
+}
+window.addEventListener('hashchange', render);
+window.addEventListener('DOMContentLoaded', render);
+startCampaignTicker();
+</script>
+</body>
+</html>
