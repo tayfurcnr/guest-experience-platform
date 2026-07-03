@@ -1,0 +1,463 @@
+
+> guest-experience-platform@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.5
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 1895ms
+ ○ Compiling / ...
+ ✓ Compiled / in 4.9s (476 modules)
+ GET / 200 in 961ms
+ GET / 200 in 5171ms
+ GET / 200 in 159ms
+ ○ Compiling /[restaurantSlug] ...
+ ✓ Compiled /[restaurantSlug] in 2.8s (509 modules)
+ GET /favicon.ico 200 in 3259ms
+ GET /favicon.ico 200 in 51ms
+ GET /favicon.ico 200 in 68ms
+ GET /favicon.ico 200 in 57ms
+ GET /favicon.ico 200 in 59ms
+ GET /favicon.ico 200 in 75ms
+ GET /favicon.ico 200 in 43ms
+ GET /favicon.ico 200 in 56ms
+ GET /favicon.ico 200 in 93ms
+ GET /favicon.ico 200 in 61ms
+ ✓ Compiled in 375ms (523 modules)
+ GET / 200 in 105ms
+ GET /favicon.ico 200 in 2580ms
+ GET /favicon.ico 200 in 39ms
+ GET /favicon.ico 200 in 81ms
+ GET /favicon.ico 200 in 61ms
+ ✓ Compiled in 394ms (484 modules)
+ GET / 200 in 75ms
+ GET /?lang=tr 200 in 71ms
+ ✓ Compiled /[restaurantSlug] in 73ms (261 modules)
+ GET /favicon.ico 200 in 261ms
+ GET /?lang=tr 200 in 85ms
+ GET /favicon.ico 200 in 56ms
+ GET /?lang=tr 200 in 53ms
+ GET /favicon.ico 200 in 65ms
+ ✓ Compiled in 553ms (484 modules)
+ ✓ Compiled in 274ms (498 modules)
+ GET / 200 in 98ms
+ GET /?lang=tr 200 in 55ms
+ ✓ Compiled /[restaurantSlug] in 179ms (261 modules)
+ GET /favicon.ico 200 in 348ms
+ GET /?lang=tr 200 in 51ms
+ ✓ Compiled in 479ms (525 modules)
+ GET /?lang=tr 200 in 128ms
+ GET /favicon.ico 200 in 53ms
+ GET /?lang=tr 200 in 91ms
+ GET /favicon.ico 200 in 33ms
+ GET /?lang=tr 200 in 48ms
+ GET /favicon.ico 200 in 69ms
+ GET /?lang=tr 200 in 49ms
+ GET /favicon.ico 200 in 72ms
+ GET /?lang=tr 200 in 51ms
+ GET /favicon.ico 200 in 84ms
+ GET /?lang=tr 200 in 42ms
+ GET /favicon.ico 200 in 51ms
+ GET /?lang=tr 200 in 57ms
+ GET /favicon.ico 200 in 80ms
+ GET / 200 in 70ms
+ GET /favicon.ico 200 in 90ms
+ GET /favicon.ico 200 in 83ms
+ GET /favicon.ico 200 in 102ms
+ ✓ Compiled in 703ms (513 modules)
+ GET / 200 in 142ms
+ GET /?lang=tr 200 in 76ms
+ GET /favicon.ico 200 in 80ms
+ GET /?lang=tr 200 in 63ms
+ GET /favicon.ico 200 in 63ms
+ GET /?lang=tr 200 in 60ms
+ GET /favicon.ico 200 in 57ms
+ GET /?lang=tr 200 in 36ms
+ GET /favicon.ico 200 in 62ms
+ GET /?lang=tr 200 in 52ms
+ GET /?lang=tr 200 in 72ms
+ GET /?lang=tr 200 in 46ms
+ GET /favicon.ico 200 in 57ms
+ GET /?lang=tr 200 in 46ms
+ GET /?lang=tr 200 in 29ms
+ GET /favicon.ico 200 in 20ms
+ GET /favicon.ico 200 in 49ms
+ GET /?lang=tr 200 in 60ms
+ GET /favicon.ico 200 in 115ms
+ GET /?lang=tr 200 in 40ms
+ GET /?lang=tr 200 in 33ms
+ GET /favicon.ico 200 in 9ms
+ GET /?lang=tr 200 in 39ms
+ GET /?lang=tr 200 in 42ms
+ GET /?lang=tr 200 in 40ms
+ GET /?lang=tr 200 in 44ms
+ GET /?lang=tr 200 in 35ms
+ GET /?lang=tr 200 in 36ms
+ GET /?lang=tr 200 in 40ms
+ GET /?lang=tr 200 in 36ms
+ GET /?lang=tr 200 in 53ms
+ GET /?lang=tr 200 in 37ms
+ GET /?lang=tr 200 in 42ms
+ GET /?lang=tr 200 in 41ms
+ GET /?lang=tr 200 in 34ms
+ GET /favicon.ico 200 in 84ms
+ GET /?lang=tr 200 in 55ms
+ GET /?lang=tr 200 in 50ms
+ GET /favicon.ico 200 in 53ms
+ GET /favicon.ico 200 in 54ms
+ GET /?lang=tr 200 in 68ms
+ GET /?lang=tr 200 in 32ms
+ GET /favicon.ico 200 in 8ms
+ GET /?lang=tr 200 in 36ms
+ GET /?lang=tr 200 in 40ms
+ GET /?lang=tr 200 in 30ms
+ GET /?lang=tr 200 in 32ms
+ GET /?lang=tr 200 in 50ms
+ GET /?lang=tr 200 in 40ms
+ GET /?lang=tr 200 in 70ms
+ GET /favicon.ico 200 in 55ms
+ GET /?lang=tr 200 in 34ms
+ GET /favicon.ico 200 in 61ms
+ GET /?lang=tr 200 in 84ms
+ GET /?lang=tr 200 in 28ms
+ GET /favicon.ico 200 in 9ms
+ GET /?lang=tr 200 in 35ms
+ GET /favicon.ico 200 in 29ms
+ GET /favicon.ico 200 in 38ms
+ GET /?lang=tr 200 in 47ms
+ GET /?lang=tr 200 in 40ms
+ GET /favicon.ico 200 in 19ms
+ GET /favicon.ico 200 in 52ms
+ GET /?lang=tr 200 in 59ms
+ GET /favicon.ico 200 in 43ms
+ GET /?lang=tr 200 in 47ms
+ GET /favicon.ico 200 in 39ms
+ GET /?lang=tr 200 in 65ms
+ GET /?lang=tr 200 in 51ms
+ GET /?lang=tr 200 in 31ms
+ GET /favicon.ico 200 in 36ms
+ GET /?lang=tr 200 in 41ms
+ GET /?lang=tr 200 in 72ms
+ GET /favicon.ico 200 in 76ms
+ GET /?lang=tr 200 in 42ms
+ GET /?lang=tr 200 in 64ms
+ GET /favicon.ico 200 in 35ms
+ GET /?lang=tr 200 in 55ms
+ GET /?lang=tr 200 in 55ms
+ GET /favicon.ico 200 in 89ms
+ GET /?lang=tr 200 in 41ms
+ GET /favicon.ico 200 in 67ms
+ GET /?lang=tr 200 in 63ms
+ GET /?lang=tr 200 in 50ms
+ GET /?lang=tr 200 in 73ms
+ GET /?lang=tr 200 in 62ms
+ GET /favicon.ico 200 in 31ms
+ GET /?lang=tr 200 in 49ms
+ GET /favicon.ico 200 in 48ms
+ GET /?lang=tr 200 in 61ms
+ GET /favicon.ico 200 in 80ms
+ GET /?lang=tr 200 in 40ms
+ GET /favicon.ico 200 in 60ms
+ GET /?lang=tr 200 in 96ms
+ GET /?lang=tr 200 in 43ms
+ GET /favicon.ico 200 in 49ms
+ GET /favicon.ico 200 in 76ms
+ GET /?lang=tr 200 in 74ms
+ GET /favicon.ico 200 in 52ms
+ GET /favicon.ico 200 in 81ms
+ GET /?lang=tr 200 in 35ms
+ GET /favicon.ico 200 in 69ms
+ GET /?lang=tr 200 in 72ms
+ GET /favicon.ico 200 in 66ms
+ ✓ Compiled in 248ms (500 modules)
+ GET / 200 in 63ms
+ GET /?lang=tr 200 in 55ms
+ ✓ Compiled /[restaurantSlug] in 73ms (262 modules)
+ GET /favicon.ico 200 in 243ms
+ GET /?lang=tr 200 in 47ms
+ GET /favicon.ico 200 in 69ms
+ ✓ Compiled in 233ms (527 modules)
+ GET / 200 in 89ms
+ GET /?lang=tr 200 in 67ms
+ GET /favicon.ico 200 in 62ms
+ GET /?lang=tr 200 in 79ms
+ GET /?lang=tr 200 in 30ms
+ GET /?lang=tr 200 in 71ms
+ GET /?lang=tr 200 in 54ms
+ GET /?lang=tr 200 in 31ms
+ GET /?lang=tr 200 in 55ms
+ GET /?lang=tr 200 in 39ms
+ GET /?lang=tr 200 in 70ms
+ GET /?lang=tr 200 in 47ms
+ GET /favicon.ico 200 in 89ms
+ GET /?lang=tr 200 in 75ms
+ GET /favicon.ico 200 in 58ms
+ GET /?lang=tr 200 in 51ms
+ GET /?lang=tr 200 in 27ms
+ GET /favicon.ico 200 in 34ms
+ GET /?lang=tr 200 in 41ms
+ GET /favicon.ico 200 in 19ms
+ GET /?lang=tr 200 in 46ms
+ GET /?lang=tr 200 in 47ms
+ GET /?lang=tr 200 in 33ms
+ GET /?lang=tr 200 in 63ms
+ GET /favicon.ico 200 in 72ms
+ GET /?lang=tr 200 in 53ms
+ GET /?lang=tr 200 in 33ms
+ GET /?lang=tr 200 in 34ms
+ GET /?lang=tr 200 in 37ms
+ GET /?lang=tr 200 in 42ms
+ GET /?lang=tr 200 in 42ms
+ GET /?lang=tr 200 in 41ms
+ GET /favicon.ico 200 in 53ms
+ GET /?lang=tr 200 in 47ms
+ GET /?lang=tr 200 in 29ms
+ GET /?lang=tr 200 in 51ms
+ GET /?lang=tr 200 in 69ms
+ GET /?lang=tr 200 in 68ms
+ GET /?lang=tr 200 in 52ms
+ GET /favicon.ico 200 in 62ms
+ GET /?lang=tr 200 in 58ms
+ GET /favicon.ico 200 in 58ms
+ GET /?lang=tr 200 in 67ms
+ GET /?lang=tr 200 in 54ms
+ GET /?lang=tr 200 in 38ms
+ GET /?lang=tr 200 in 38ms
+ GET /favicon.ico 200 in 66ms
+ ✓ Compiled in 378ms (527 modules)
+ GET / 200 in 144ms
+ ✓ Compiled in 295ms (500 modules)
+ GET / 200 in 100ms
+ ✓ Compiled in 385ms (486 modules)
+ GET /?lang=tr 200 in 158ms
+ ✓ Compiled /[restaurantSlug] in 78ms (262 modules)
+ GET /favicon.ico 200 in 250ms
+ GET /?lang=tr 200 in 137ms
+ GET /favicon.ico 200 in 77ms
+ ✓ Compiled in 276ms (527 modules)
+ GET / 200 in 72ms
+ ✓ Compiled in 217ms (527 modules)
+ GET / 200 in 45ms
+ ✓ Compiled in 320ms (500 modules)
+ GET / 200 in 99ms
+ ✓ Compiled in 249ms (500 modules)
+ GET / 200 in 80ms
+ GET /?lang=tr 200 in 97ms
+ ✓ Compiled /[restaurantSlug] in 58ms (262 modules)
+ GET /favicon.ico 200 in 189ms
+ GET /?lang=tr 200 in 42ms
+ GET /?lang=tr 200 in 47ms
+ GET /?lang=tr 200 in 43ms
+ GET /?lang=tr 200 in 38ms
+ GET /?lang=tr 200 in 28ms
+ GET /?lang=tr 200 in 28ms
+ GET /?lang=tr 200 in 33ms
+ GET /?lang=tr 200 in 27ms
+ GET /?lang=tr 200 in 69ms
+ GET /?lang=tr 200 in 65ms
+ GET /favicon.ico 200 in 54ms
+ GET /?lang=tr 200 in 63ms
+ GET /?lang=tr 200 in 35ms
+ GET /favicon.ico 200 in 8ms
+ GET /?lang=tr 200 in 35ms
+ GET /favicon.ico 200 in 37ms
+ GET /?lang=tr 200 in 60ms
+ GET /favicon.ico 200 in 33ms
+ GET /?lang=tr 200 in 46ms
+ GET /?lang=tr 200 in 32ms
+ GET /?lang=tr 200 in 68ms
+ GET /?lang=tr 200 in 30ms
+ GET /?lang=tr 200 in 28ms
+ GET /?lang=tr 200 in 90ms
+ GET /?lang=tr 200 in 30ms
+ GET /?lang=tr 200 in 31ms
+ GET /favicon.ico 200 in 9ms
+ GET /favicon.ico 200 in 54ms
+ GET /?lang=tr 200 in 74ms
+ GET /?lang=tr 200 in 59ms
+ GET /?lang=tr 200 in 55ms
+ GET /?lang=tr 200 in 39ms
+ GET /?lang=tr 200 in 28ms
+ GET /favicon.ico 200 in 9ms
+ GET /?lang=tr 200 in 24ms
+ GET /?lang=tr 200 in 32ms
+ GET /?lang=tr 200 in 31ms
+ GET /favicon.ico 200 in 35ms
+ GET /?lang=tr 200 in 70ms
+ GET /?lang=tr 200 in 51ms
+ GET /?lang=tr 200 in 36ms
+ GET /favicon.ico 200 in 22ms
+ GET /favicon.ico 200 in 48ms
+ ✓ Compiled in 221ms (527 modules)
+ GET / 200 in 71ms
+ ✓ Compiled in 238ms (500 modules)
+ GET / 200 in 72ms
+ GET /?lang=tr 200 in 66ms
+ ✓ Compiled /[restaurantSlug] in 57ms (262 modules)
+ GET /favicon.ico 200 in 148ms
+ GET /?lang=tr 200 in 56ms
+ GET /favicon.ico 200 in 65ms
+ ✓ Compiled in 165ms (500 modules)
+ ✓ Compiled in 122ms (500 modules)
+ ✓ Compiled in 90ms (500 modules)
+ ✓ Compiled in 82ms (500 modules)
+ ✓ Compiled in 96ms (500 modules)
+ ✓ Compiled in 116ms (500 modules)
+ ✓ Compiled in 96ms (500 modules)
+ GET /?lang=tr 200 in 91ms
+ ✓ Compiled /[restaurantSlug] in 223ms (262 modules)
+ GET /favicon.ico 200 in 419ms
+ ✓ Compiled in 322ms (500 modules)
+ GET / 200 in 76ms
+ GET /?lang=tr 200 in 55ms
+ ✓ Compiled /[restaurantSlug] in 112ms (262 modules)
+ GET /favicon.ico 200 in 257ms
+ ✓ Compiled in 553ms (527 modules)
+ GET / 200 in 137ms
+ ✓ Compiled in 566ms (486 modules)
+ GET /?lang=tr 200 in 185ms
+ ✓ Compiled /[restaurantSlug] in 71ms (262 modules)
+ GET /favicon.ico 200 in 271ms
+ GET /?lang=tr 200 in 79ms
+ GET /?lang=tr 200 in 43ms
+ GET /favicon.ico 200 in 78ms
+ ✓ Compiled in 315ms (527 modules)
+ ✓ Compiled in 251ms (513 modules)
+ GET / 200 in 92ms
+ GET /?lang=tr 200 in 70ms
+ GET /favicon.ico 200 in 69ms
+ GET /?lang=tr 200 in 45ms
+ GET /favicon.ico 200 in 62ms
+ GET /?lang=tr 200 in 56ms
+ GET /?lang=tr 200 in 41ms
+ GET /?lang=tr 200 in 27ms
+ GET /?lang=tr 200 in 28ms
+ GET /?lang=tr 200 in 25ms
+ GET /?lang=tr 200 in 27ms
+ GET /?lang=tr 200 in 27ms
+ GET /favicon.ico 200 in 56ms
+ GET /?lang=tr 200 in 90ms
+ GET /?lang=tr 200 in 36ms
+ GET /?lang=tr 200 in 28ms
+ GET /?lang=tr 200 in 38ms
+ GET /?lang=tr 200 in 31ms
+ GET /?lang=tr 200 in 35ms
+ GET /?lang=tr 200 in 36ms
+ GET /?lang=tr 200 in 23ms
+ GET /?lang=tr 200 in 54ms
+ GET /favicon.ico 200 in 12ms
+ GET /?lang=tr 200 in 33ms
+ GET /?lang=tr 200 in 32ms
+ GET /?lang=tr 200 in 31ms
+ GET /?lang=tr 200 in 52ms
+ GET /favicon.ico 200 in 68ms
+ GET /?lang=tr 200 in 43ms
+ GET /favicon.ico 200 in 67ms
+ GET /?lang=tr 200 in 46ms
+ GET /favicon.ico 200 in 58ms
+ GET /?lang=tr 200 in 52ms
+ GET /favicon.ico 200 in 51ms
+ GET /?lang=tr 200 in 58ms
+ GET /favicon.ico 200 in 32ms
+ GET /?lang=tr 200 in 45ms
+ GET /favicon.ico 200 in 55ms
+ GET /?lang=tr 200 in 63ms
+ GET /?lang=tr 200 in 27ms
+ GET /?lang=tr 200 in 31ms
+ GET /?lang=tr 200 in 29ms
+ GET /?lang=tr 200 in 25ms
+ GET /?lang=tr 200 in 29ms
+ GET /favicon.ico 200 in 11ms
+ GET /?lang=tr 200 in 50ms
+ GET /favicon.ico 200 in 78ms
+ GET /?lang=tr 200 in 50ms
+ GET /?lang=tr 200 in 48ms
+ GET /?lang=tr 200 in 56ms
+ GET /favicon.ico 200 in 56ms
+ GET /?lang=tr 200 in 74ms
+ GET /?lang=tr 200 in 32ms
+ GET /favicon.ico 200 in 8ms
+ GET /?lang=tr 200 in 53ms
+ GET /favicon.ico 200 in 71ms
+ GET /?lang=tr 200 in 67ms
+ GET /favicon.ico 200 in 62ms
+ GET /?lang=tr 200 in 56ms
+ GET /favicon.ico 200 in 68ms
+ GET /?lang=tr 200 in 68ms
+ GET /favicon.ico 200 in 65ms
+ GET /?lang=tr 200 in 54ms
+ GET /favicon.ico 200 in 84ms
+ GET /?lang=tr 200 in 64ms
+ GET /?lang=tr 200 in 55ms
+ GET /?lang=tr 200 in 79ms
+ GET /favicon.ico 200 in 44ms
+ GET /?lang=tr 200 in 59ms
+ GET /favicon.ico 200 in 45ms
+ GET /?lang=tr 200 in 54ms
+ GET /?lang=tr 200 in 23ms
+ GET /?lang=tr 200 in 63ms
+ GET /?lang=tr 200 in 30ms
+ GET /favicon.ico 200 in 37ms
+ GET /?lang=tr 200 in 59ms
+ GET /?lang=tr 200 in 34ms
+ GET /?lang=tr 200 in 32ms
+ GET /favicon.ico 200 in 8ms
+ GET /?lang=tr 200 in 32ms
+ GET /?lang=tr 200 in 51ms
+ GET /?lang=tr 200 in 59ms
+ GET /?lang=tr 200 in 28ms
+ GET /?lang=tr 200 in 28ms
+ GET /?lang=tr 200 in 58ms
+ GET /?lang=tr 200 in 27ms
+ GET /?lang=tr 200 in 29ms
+ GET /favicon.ico 200 in 27ms
+ GET /favicon.ico 200 in 43ms
+ GET /?lang=tr 200 in 50ms
+ GET /favicon.ico 200 in 38ms
+ GET /?lang=tr 200 in 50ms
+ GET /?lang=tr 200 in 37ms
+ GET /favicon.ico 200 in 43ms
+ GET /?lang=tr 200 in 70ms
+ GET /favicon.ico 200 in 57ms
+ GET /?lang=tr 200 in 37ms
+ GET /favicon.ico 200 in 53ms
+ GET /?lang=tr 200 in 58ms
+ GET /favicon.ico 200 in 39ms
+ GET /?lang=tr 200 in 46ms
+ GET /favicon.ico 200 in 40ms
+ GET /?lang=tr 200 in 81ms
+ GET /favicon.ico 200 in 58ms
+ GET /?lang=tr 200 in 68ms
+ GET /favicon.ico 200 in 54ms
+ GET /?lang=tr 200 in 65ms
+ GET /?lang=tr 200 in 43ms
+ GET /favicon.ico 200 in 41ms
+ GET /favicon.ico 200 in 26ms
+ GET /?lang=tr 200 in 42ms
+ GET /?lang=tr 200 in 48ms
+ GET /?lang=tr 200 in 34ms
+ GET /?lang=tr 200 in 38ms
+ GET /?lang=tr 200 in 42ms
+ GET /?lang=tr 200 in 30ms
+ GET /?lang=tr 200 in 53ms
+ GET /?lang=tr 200 in 58ms
+ GET /favicon.ico 200 in 68ms
+ GET /?lang=tr 200 in 67ms
+ GET /?lang=tr 200 in 30ms
+ GET /favicon.ico 200 in 79ms
+ GET /?lang=tr 200 in 52ms
+ GET /favicon.ico 200 in 59ms
+ GET /?lang=tr 200 in 65ms
+ GET /?lang=tr 200 in 52ms
+ GET /favicon.ico 200 in 50ms
+ GET /?lang=tr 200 in 52ms
+ GET /favicon.ico 200 in 71ms
+ GET /?lang=tr 200 in 56ms
+ GET /?lang=tr 200 in 26ms
+ GET /favicon.ico 200 in 37ms
+ GET /?lang=tr 200 in 53ms
+ GET /?lang=tr 200 in 63ms
+ GET /?lang=tr 200 in 51ms
+ GET /?lang=tr 200 in 70ms
+ GET /favicon.ico 200 in 69ms
