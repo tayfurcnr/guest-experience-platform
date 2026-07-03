@@ -2,7 +2,7 @@
 
 Amaç: Restoranların dijital menüye hızlı ve yönetilebilir şekilde geçmesini sağlamak.
 
-Kapsam: İlk canlı sürümde restoranların QR tabanlı dijital menü yayınlamasını, şube ve menü operasyonlarını yönetmesini, rezervasyon almasını ve temel kullanım verilerini izlemesini sağlayan çekirdek platform devreye alınacaktır.
+Kapsam: İlk canlı sürümde restoranların QR tabanlı dijital menü yayınlamasını, şube ve menü operasyonlarını yönetmesini, rezervasyon almasını, temel kullanım verilerini izlemesini ve kullanıcıların anlık konuma göre yakındaki işletmeleri keşfetmesini sağlayan çekirdek platform devreye alınacaktır.
 
 ## Hedeflenen Çıktı
 
@@ -14,6 +14,7 @@ Release 1.0 sonunda bir restoran:
 - Kampanya ve duyuruları menü deneyimine yansıtabilmeli
 - Rezervasyon akışını temel kurallarla işletebilmeli
 - QR kullanımı ve menü etkileşimine dair temel analitik verileri görebilmeli
+- Konum izni verildiğinde anlık konuma göre yakındaki işletmeleri keşfedebilmeli
 
 ## Ana Özellikler
 
@@ -23,6 +24,12 @@ Release 1.0 sonunda bir restoran:
   - Ürün arama
   - Kategori ve ürün detay görünümü
   - Alerjen bilgisi gösterimi
+
+- Platform Keşfi
+  - Konum izni ile yakındaki işletmeleri listeleme
+  - Manuel şehir veya konum seçimi ile keşif akışını sürdürme
+  - Mesafeye göre sıralama ve filtreleme
+  - Yakındaki işletmeler için ayrı liste görünümü
 
 - Menü Yönetimi
   - Ürün oluşturma, güncelleme ve pasife alma
@@ -89,6 +96,8 @@ Canlıya çıkış öncesinde aşağıdaki hazırlıkların tamamlanması beklen
 
 - QR menü sayfası ilk içerik yüklemesini 2 saniyenin altında tamamlamalı
 - Kullanıcı, QR üzerinden menüye erişip ürün araması yapabilmeli
+- Kullanıcı konum izni verdiğinde yakın işletmeleri görebilmeli
+- Konum izni verilmezse manuel şehir veya konum seçimi ile keşif akışı devam edebilmeli
 - Admin panelinden ürün, kategori, fiyat ve alerjen bilgileri güncellenebilmeli
 - Şube bazlı QR oluşturma, indirme ve yenileme akışları sorunsuz çalışmalı
 - Kampanya popup ve banner'ları tanımlanan hedefleme kurallarına göre görünmeli

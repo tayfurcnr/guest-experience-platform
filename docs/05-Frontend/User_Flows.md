@@ -17,3 +17,4 @@ Bu belge, temel kullanıcı akışlarını tanımlar.
 - Kampanya oluşturma ve zamanlama
 - Popup kampanya yayına alma
 - Şube admin üzerinden ürün ve kategori yönetimi
+- Konum izni ile yakındaki işletmeleri görüntüleme

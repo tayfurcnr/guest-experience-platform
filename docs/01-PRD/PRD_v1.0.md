@@ -13,6 +13,7 @@
 - Rezervasyon yönetimi
 - QR analitiği
 - Restoran bilgilendirme ve duyuru katmanı
+- Kullanıcının konum izni vermesi halinde anlık konuma göre yakındaki işletmeleri keşfetmesi
 
 **Anlık Menü bir online sipariş veya yemek teslimat platformu değildir.**
 
@@ -32,6 +33,15 @@
 - Alerjen bilgileri
 - Kalori bilgileri
 - Kampanya pop-up, banner ve duyuru gösterimi Campaign Engine üzerinden yapılır
+
+---
+
+### Platform Keşfi / Yakındaki İşletmeler
+
+- Kullanıcı konum izni verirse sistem anlık konumu kullanarak yakındaki işletmeleri listeler
+- Konum izni verilmezse kullanıcı manuel şehir/konum seçimi ile keşif akışına devam eder
+- Yakındaki işletmeler mesafe bazlı sıralanır ve filtrelenebilir
+- Bu akış v1 kapsamındaki temel keşif deneyiminin bir parçasıdır
 
 ---
 
