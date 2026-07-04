@@ -13,7 +13,7 @@ const homeContent: Record<Locale, HomeContent> = {
       { name: 'Dünya Mutfağı', count: 20 },
       { name: 'Bar & Cafe', count: 14 },
     ],
-    featureFilters: ['Kampanyası Var', 'QR Menü', 'Rezervasyon Yapılabilir', 'Açık Şubeler', 'Çok Dilli Menü', 'Engelli Dostu'],
+    featureFilters: ['Rezervasyon Yapılabilir', 'Engelli Dostu'],
     distances: ['500 m', '1 km', '3 km', '5 km', '10 km+'],
     items: {
       popular: [
@@ -114,7 +114,7 @@ const homeContent: Record<Locale, HomeContent> = {
       { name: 'World Cuisine', count: 20 },
       { name: 'Bar & Cafe', count: 14 },
     ],
-    featureFilters: ['Has Offers', 'QR Menu', 'Reservable', 'Open Branches', 'Multilingual Menu', 'Accessible'],
+    featureFilters: ['Reservable', 'Accessible'],
     distances: ['500 m', '1 km', '3 km', '5 km', '10 km+'],
     items: {
       popular: [

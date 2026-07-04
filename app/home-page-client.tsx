@@ -18,7 +18,11 @@ function Icon({
     | 'bell'
     | 'refresh'
     | 'menu'
-    | 'chevron';
+    | 'chevron'
+    | 'calendar'
+    | 'accessibility'
+    | 'plus'
+    | 'spark';
 }) {
   const common = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
 
@@ -64,6 +68,39 @@ function Icon({
           <path d="M4 7h16" {...common} />
           <path d="M4 12h16" {...common} />
           <path d="M4 17h16" {...common} />
+        </svg>
+      );
+    case 'calendar':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="6" width="16" height="14" rx="2.5" {...common} />
+          <path d="M8 4v4" {...common} />
+          <path d="M16 4v4" {...common} />
+          <path d="M4 10h16" {...common} />
+        </svg>
+      );
+    case 'accessibility':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="5.5" r="1.8" {...common} />
+          <path d="M7 9.5h10" {...common} />
+          <path d="M12 7.5v6" {...common} />
+          <path d="m10 13.5-3 5" {...common} />
+          <path d="m14 13.5 3 5" {...common} />
+          <path d="m9 9.5 3 2 3-2" {...common} />
+        </svg>
+      );
+    case 'plus':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 5v14" {...common} />
+          <path d="M5 12h14" {...common} />
+        </svg>
+      );
+    case 'spark':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m12 4 1.8 4.2L18 10l-4.2 1.8L12 16l-1.8-4.2L6 10l4.2-1.8L12 4Z" {...common} />
         </svg>
       );
     case 'chevron':
@@ -134,19 +171,135 @@ function SectionHeader({
   );
 }
 
+function CategoryGlyph({ categoryName }: { categoryName: string }) {
+  const key = categoryName.toLowerCase();
+  const common = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round', strokeLinejoin: 'round' } as const;
+
+  if (key.includes('tümü') || key.includes('all')) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="4" y="4" width="6" height="6" rx="1.4" {...common} />
+        <rect x="14" y="4" width="6" height="6" rx="1.4" {...common} />
+        <rect x="4" y="14" width="6" height="6" rx="1.4" {...common} />
+        <rect x="14" y="14" width="6" height="6" rx="1.4" {...common} />
+      </svg>
+    );
+  }
+
+  if (key.includes('burger')) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5 11.5h14" {...common} />
+        <path d="M6 15h12" {...common} />
+        <path d="M7 9.5a5 5 0 0 1 10 0" {...common} />
+        <path d="M6.5 15.5v1a1.5 1.5 0 0 0 1.5 1.5h8a1.5 1.5 0 0 0 1.5-1.5v-1" {...common} />
+      </svg>
+    );
+  }
+
+  if (key.includes('pizza')) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4.5 5.5 19 9.5 9.5 19 4.5 5.5Z" {...common} />
+        <circle cx="10.5" cy="10.5" r="1" {...common} />
+        <circle cx="13.8" cy="11.8" r="1" {...common} />
+      </svg>
+    );
+  }
+
+  if (key.includes('kebap') || key.includes('kebab')) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="m5 5 14 14" {...common} />
+        <path d="M8 7.5 6.2 9.3" {...common} />
+        <path d="M11 10.5 9.2 12.3" {...common} />
+        <path d="M14 13.5 12.2 15.3" {...common} />
+        <path d="M17 16.5 15.2 18.3" {...common} />
+      </svg>
+    );
+  }
+
+  if (key.includes('kahve') || key.includes('coffee')) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M6 10h9v4a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4v-4Z" {...common} />
+        <path d="M15 11h1.5A2.5 2.5 0 0 1 19 13.5v0A2.5 2.5 0 0 1 16.5 16H15" {...common} />
+        <path d="M9 6.5c0-1 1-1.3 1-2.5" {...common} />
+        <path d="M12 6.5c0-1 1-1.3 1-2.5" {...common} />
+      </svg>
+    );
+  }
+
+  if (key.includes('tatlı') || key.includes('dessert')) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M7 10h10l-1.2 7H8.2L7 10Z" {...common} />
+        <path d="M9 10a3 3 0 1 1 6 0" {...common} />
+        <path d="M12 5.5v2" {...common} />
+      </svg>
+    );
+  }
+
+  if (key.includes('türk') || key.includes('turkish')) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M5.5 15.5h13" {...common} />
+        <path d="M7 15.5a5 5 0 0 1 10 0" {...common} />
+        <path d="M6 15.5v1.5" {...common} />
+        <path d="M18 15.5v1.5" {...common} />
+        <path d="M4.5 18h15" {...common} />
+      </svg>
+    );
+  }
+
+  if (key.includes('dünya') || key.includes('world')) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <circle cx="12" cy="12" r="8" {...common} />
+        <path d="M4.5 12h15" {...common} />
+        <path d="M12 4a12 12 0 0 1 0 16" {...common} />
+        <path d="M12 4a12 12 0 0 0 0 16" {...common} />
+      </svg>
+    );
+  }
+
+  if (key.includes('bar') || key.includes('cafe')) {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8 5h8l-1 5H9L8 5Z" {...common} />
+        <path d="M10 10v6" {...common} />
+        <path d="M14 10v6" {...common} />
+        <path d="M8 18h8" {...common} />
+      </svg>
+    );
+  }
+
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="8" {...common} />
+      <path d="M8 12h8" {...common} />
+      <path d="M12 8v8" {...common} />
+    </svg>
+  );
+}
+
 export function HomePageClient({ locale }: { locale: Locale }) {
   const messages = useMemo(() => getMessages(locale), [locale]);
   const content = useMemo(() => getHomeContent(locale), [locale]);
   const [selectedCategory, setSelectedCategory] = useState(content.categories[0]);
-  const [selectedFeature, setSelectedFeature] = useState(content.featureFilters[0]);
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [selectedDistance, setSelectedDistance] = useState(content.distances[3]);
-  const [openFilter, setOpenFilter] = useState<'category' | 'feature' | 'distance' | null>(null);
+  const [customDistanceKm, setCustomDistanceKm] = useState<number | null>(null);
+  const [openFilter, setOpenFilter] = useState<'distance' | null>(null);
+  const [openNowOnly, setOpenNowOnly] = useState(false);
   const filtersMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSelectedCategory(content.categories[0]);
-    setSelectedFeature(content.featureFilters[0]);
+    setSelectedFeatures([]);
     setSelectedDistance(content.distances[3]);
+    setCustomDistanceKm(null);
+    setOpenNowOnly(false);
   }, [content]);
 
   useEffect(() => {
@@ -162,13 +315,36 @@ export function HomePageClient({ locale }: { locale: Locale }) {
 
   const resetFilters = () => {
     setSelectedCategory(content.categories[0]);
-    setSelectedFeature(content.featureFilters[0]);
+    setSelectedFeatures([]);
     setSelectedDistance(content.distances[3]);
+    setCustomDistanceKm(null);
+    setOpenNowOnly(false);
     setOpenFilter(null);
   };
-  const [sortCaption, sortValue] = messages.home.filters.sortByPopular.includes(':')
+
+  const toggleFeature = (feature: string) => {
+    setSelectedFeatures((current) =>
+      current.includes(feature) ? current.filter((item) => item !== feature) : [...current, feature],
+    );
+  };
+
+  const [, sortValue] = messages.home.filters.sortByPopular.includes(':')
     ? messages.home.filters.sortByPopular.split(/:\s(.+)/)
     : ['Sort', messages.home.filters.sortByPopular];
+
+  const defaultCategoryName = content.categories[0]?.name;
+  const defaultDistance = content.distances[3];
+  const distanceLabel = customDistanceKm ? `${customDistanceKm} km` : selectedDistance;
+  const hasActiveFilters =
+    selectedCategory.name !== defaultCategoryName ||
+    distanceLabel !== defaultDistance ||
+    openNowOnly ||
+    selectedFeatures.length > 0;
+
+  const filtersLabel = locale === 'tr' ? 'Filtreler' : 'Filters';
+  const moreLabel = locale === 'tr' ? 'Daha Fazla' : 'More';
+  const openNowLabel = locale === 'tr' ? 'Açık Olanlar' : 'Open Now';
+  const featureSummary = selectedFeatures.length > 0 ? selectedFeatures.join(' • ') : messages.home.filters.features;
 
   return (
     <main className="shell" id="top">
@@ -228,144 +404,149 @@ export function HomePageClient({ locale }: { locale: Locale }) {
         searchPlaceholder={messages.home.searchPlaceholder}
       />
 
-      <section className="filters-row" aria-label="Filters">
-        <div className="filters-row__header">
-          <div className="filters-row__intro">
-            <strong>{messages.home.filters.categories}</strong>
-            <span>
-              {selectedCategory.name} • {selectedFeature} • {selectedDistance}
-            </span>
+      <section className="browse-surface">
+        <section className="category-showcase" aria-label={messages.home.filters.categories}>
+          <div className="category-showcase__head">
+            <h2>{messages.home.filters.categories}</h2>
+            <a href="#top" className="category-showcase__link">
+              {messages.home.sections.seeAll} <Icon name="chevron" />
+            </a>
           </div>
 
-          <button className="filters-reset filters-reset--header" type="button" onClick={resetFilters}>
-            <Icon name="refresh" />
-            {messages.home.filters.clear}
-          </button>
-        </div>
+          <div className="category-grid">
+            {content.categories.map((category) => (
+              <button
+                key={category.name}
+                type="button"
+                className={`category-tile${selectedCategory.name === category.name ? ' active' : ''}`}
+                onClick={() => setSelectedCategory(category)}
+              >
+                <span className="category-tile__icon">
+                  <CategoryGlyph categoryName={category.name} />
+                </span>
+                <span className="category-tile__content">
+                  <strong>{category.name}</strong>
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
 
-        <div className="filters-strip" ref={filtersMenuRef}>
-          <div className="filters-dropdown">
-            <button
-              className="select-field filters-category-trigger"
-              type="button"
-              aria-expanded={openFilter === 'category'}
-              onClick={() => setOpenFilter((current) => (current === 'category' ? null : 'category'))}
-            >
-              <span className="select-field__content">
-                <span className="select-field__caption">{messages.home.filters.categories}</span>
-                <span className="select-field__value">{selectedCategory.name}</span>
+        <section className="filters-surface" aria-label={filtersLabel}>
+          <div className="filters-surface__label">{filtersLabel}</div>
+
+          <div className={`filters-toolbar${openFilter ? ' filters-toolbar--menu-open' : ''}`} ref={filtersMenuRef}>
+            <button className="toolbar-pill toolbar-pill--select" type="button">
+              <span className="toolbar-pill__icon">
+                <Icon name="spark" />
               </span>
-              <span className="select-field__chevron">
+              <span className="toolbar-pill__label">{sortValue}</span>
+              <span className="toolbar-pill__chevron">
                 <Icon name="chevron" />
               </span>
             </button>
 
-            {openFilter === 'category' ? (
-              <div className="filters-dropdown__menu" role="menu" aria-label={messages.home.filters.categories}>
-                {content.categories.map((category) => (
-                  <button
-                    key={category.name}
-                    type="button"
-                    className={`filters-dropdown__item${selectedCategory.name === category.name ? ' active' : ''}`}
-                    onClick={() => {
-                      setSelectedCategory(category);
-                      setOpenFilter(null);
-                    }}
-                  >
-                    <span>{category.name}</span>
-                    <span>{category.count}</span>
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
+            <div className="filters-dropdown">
+              <button
+                className="toolbar-pill toolbar-pill--select"
+                type="button"
+                aria-expanded={openFilter === 'distance'}
+                onClick={() => setOpenFilter((current) => (current === 'distance' ? null : 'distance'))}
+              >
+                <span className="toolbar-pill__icon">
+                  <Icon name="pin" />
+                </span>
+                <span className="toolbar-pill__label">{distanceLabel}</span>
+                <span className="toolbar-pill__chevron">
+                  <Icon name="chevron" />
+                </span>
+              </button>
 
-          <div className="filters-dropdown">
+              {openFilter === 'distance' ? (
+                <div className="filters-dropdown__menu" role="menu" aria-label={messages.home.filters.distance}>
+                  {content.distances.map((distance) => (
+                    <button
+                      key={distance}
+                      type="button"
+                      className={`filters-dropdown__item${selectedDistance === distance ? ' active' : ''}`}
+                      onClick={() => {
+                        setSelectedDistance(distance);
+                        setCustomDistanceKm(null);
+                        setOpenFilter(null);
+                      }}
+                    >
+                      <span>{distance}</span>
+                    </button>
+                  ))}
+
+                  <div className="filters-dropdown__custom">
+                    <div className="filters-dropdown__custom-head">
+                      <strong>{locale === 'tr' ? 'Özel Mesafe' : 'Custom Distance'}</strong>
+                      <span>{distanceLabel}</span>
+                    </div>
+
+                    <input
+                      className="filters-dropdown__range"
+                      type="range"
+                      min={1}
+                      max={50}
+                      step={1}
+                      value={customDistanceKm ?? (Number.parseInt(selectedDistance, 10) || 5)}
+                      onChange={(event) => {
+                        const nextDistance = Number(event.target.value);
+                        setCustomDistanceKm(nextDistance);
+                        setSelectedDistance(`${nextDistance} km`);
+                      }}
+                      aria-label={locale === 'tr' ? 'Özel mesafe seç' : 'Choose custom distance'}
+                    />
+
+                    <div className="filters-dropdown__range-scale" aria-hidden="true">
+                      <span>1 km</span>
+                      <span>50 km</span>
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </div>
+
+            {content.featureFilters.map((feature, index) => (
+              <button
+                key={feature}
+                type="button"
+                className={`toolbar-pill${selectedFeatures.includes(feature) ? ' active' : ''}`}
+                onClick={() => toggleFeature(feature)}
+              >
+                <span className="toolbar-pill__icon">
+                  <Icon name={index === 0 ? 'calendar' : 'accessibility'} />
+                </span>
+                <span className="toolbar-pill__label">{feature}</span>
+              </button>
+            ))}
+
             <button
-              className="select-field filters-category-trigger"
               type="button"
-              aria-expanded={openFilter === 'feature'}
-              onClick={() => setOpenFilter((current) => (current === 'feature' ? null : 'feature'))}
+              className={`toolbar-pill${openNowOnly ? ' active toolbar-pill--success' : ''}`}
+              onClick={() => setOpenNowOnly((current) => !current)}
             >
-              <span className="select-field__content">
-                <span className="select-field__caption">{messages.home.filters.features}</span>
-                <span className="select-field__value">{selectedFeature}</span>
-              </span>
-              <span className="select-field__chevron">
-                <Icon name="chevron" />
-              </span>
+              <span className={`toolbar-pill__dot${openNowOnly ? ' active' : ''}`} />
+              <span className="toolbar-pill__label">{openNowLabel}</span>
             </button>
 
-            {openFilter === 'feature' ? (
-              <div className="filters-dropdown__menu" role="menu" aria-label={messages.home.filters.features}>
-                {content.featureFilters.map((feature) => (
-                  <button
-                    key={feature}
-                    type="button"
-                    className={`filters-dropdown__item${selectedFeature === feature ? ' active' : ''}`}
-                    onClick={() => {
-                      setSelectedFeature(feature);
-                      setOpenFilter(null);
-                    }}
-                  >
-                    <span>{feature}</span>
-                  </button>
-                ))}
-              </div>
-            ) : null}
-          </div>
-
-          <div className="filters-dropdown">
-            <button
-              className="select-field filters-category-trigger"
-              type="button"
-              aria-expanded={openFilter === 'distance'}
-              onClick={() => setOpenFilter((current) => (current === 'distance' ? null : 'distance'))}
-            >
-              <span className="select-field__content">
-                <span className="select-field__caption">{messages.home.filters.distance}</span>
-                <span className="select-field__value">{selectedDistance}</span>
+            <button className="toolbar-pill toolbar-pill--more" type="button">
+              <span className="toolbar-pill__icon">
+                <Icon name="plus" />
               </span>
-              <span className="select-field__chevron">
-                <Icon name="chevron" />
-              </span>
+              <span className="toolbar-pill__label">{moreLabel}</span>
             </button>
 
-            {openFilter === 'distance' ? (
-              <div className="filters-dropdown__menu" role="menu" aria-label={messages.home.filters.distance}>
-                {content.distances.map((distance) => (
-                  <button
-                    key={distance}
-                    type="button"
-                    className={`filters-dropdown__item${selectedDistance === distance ? ' active' : ''}`}
-                    onClick={() => {
-                      setSelectedDistance(distance);
-                      setOpenFilter(null);
-                    }}
-                  >
-                    <span>{distance}</span>
-                  </button>
-                ))}
-              </div>
+            {hasActiveFilters ? (
+              <button className="filters-reset filters-reset--inline" type="button" onClick={resetFilters}>
+                <Icon name="refresh" />
+                {messages.home.filters.clear}
+              </button>
             ) : null}
           </div>
-
-          <button className="select-field filters-sort" type="button">
-            <span className="select-field__content">
-              <span className="select-field__caption">{sortCaption}</span>
-              <span className="select-field__value">{sortValue}</span>
-            </span>
-            <span className="select-field__chevron">
-              <Icon name="chevron" />
-            </span>
-          </button>
-        </div>
-
-        <div className="filters-active">
-          <span className="filters-active__chip">{selectedCategory.name}</span>
-          <span className="filters-active__chip">{selectedFeature}</span>
-          <span className="filters-active__chip">{selectedDistance}</span>
-        </div>
+        </section>
       </section>
 
       <section className="section">
