@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Anlık Menü',
-  description: 'Marka, şube ve kampanya keşif platformu',
+  title: 'Venuego',
+  description: 'Brand, branch and campaign discovery platform',
 };
 
 export default function RootLayout({

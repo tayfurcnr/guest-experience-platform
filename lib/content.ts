@@ -1,15 +1,15 @@
-import { getMockHomeContent } from '@/data/mock/home-content';
+import { getMockDiscoverContent } from '@/data/mock/discover-content';
 import { getMockRestaurantContent } from '@/data/mock/restaurant-content';
-import type { HomeContent, Locale, RestaurantContent } from '@/locales/types';
+import type { DiscoverContent, Locale, RestaurantContent } from '@/locales/types';
 
 export interface ContentProvider {
-  getHomeContent(locale: Locale): HomeContent;
+  getDiscoverContent(locale: Locale): DiscoverContent;
   getRestaurantContent(locale: Locale): RestaurantContent;
 }
 
 const mockContentProvider: ContentProvider = {
-  getHomeContent(locale) {
-    return getMockHomeContent(locale);
+  getDiscoverContent(locale) {
+    return getMockDiscoverContent(locale);
   },
   getRestaurantContent(locale) {
     return getMockRestaurantContent(locale);
@@ -20,8 +20,8 @@ function getContentProvider(): ContentProvider {
   return mockContentProvider;
 }
 
-export function getHomeContent(locale: Locale): HomeContent {
-  return getContentProvider().getHomeContent(locale);
+export function getDiscoverContent(locale: Locale): DiscoverContent {
+  return getContentProvider().getDiscoverContent(locale);
 }
 
 export function getRestaurantContent(locale: Locale): RestaurantContent {

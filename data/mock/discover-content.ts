@@ -1,6 +1,6 @@
-import type { HomeContent, Locale } from '@/locales/types';
+import type { DiscoverContent, Locale } from '@/locales/types';
 
-const homeContent: Record<Locale, HomeContent> = {
+const discoverContent: Record<Locale, DiscoverContent> = {
   tr: {
     categories: [
       { name: 'Tümü', count: 128 },
@@ -205,6 +205,6 @@ const homeContent: Record<Locale, HomeContent> = {
   },
 };
 
-export function getMockHomeContent(locale: Locale): HomeContent {
-  return homeContent[locale];
+export function getMockDiscoverContent(locale: Locale): DiscoverContent {
+  return discoverContent[locale];
 }

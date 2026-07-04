@@ -1,4 +1,4 @@
-export function HomeIcon({
+export function DiscoverIcon({
   name,
 }: {
   name:
@@ -8,7 +8,12 @@ export function HomeIcon({
     | 'bell'
     | 'refresh'
     | 'menu'
+    | 'login'
     | 'chevron'
+    | 'search'
+    | 'target'
+    | 'shield'
+    | 'close'
     | 'calendar'
     | 'accessibility'
     | 'plus'
@@ -58,6 +63,46 @@ export function HomeIcon({
           <path d="M4 7h16" {...common} />
           <path d="M4 12h16" {...common} />
           <path d="M4 17h16" {...common} />
+        </svg>
+      );
+    case 'login':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <rect x="4" y="4" width="12" height="16" rx="2.5" {...common} />
+          <path d="M12 12h8" {...common} />
+          <path d="m17 8 4 4-4 4" {...common} />
+        </svg>
+      );
+    case 'search':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="11" cy="11" r="6.5" {...common} />
+          <path d="m16 16 4 4" {...common} />
+        </svg>
+      );
+    case 'target':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="7" {...common} />
+          <circle cx="12" cy="12" r="3" {...common} />
+          <path d="M12 2v3" {...common} />
+          <path d="M12 19v3" {...common} />
+          <path d="M2 12h3" {...common} />
+          <path d="M19 12h3" {...common} />
+        </svg>
+      );
+    case 'shield':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M12 3 5.5 5.8v5.7c0 4 2.5 7.7 6.5 9.5 4-1.8 6.5-5.5 6.5-9.5V5.8L12 3Z" {...common} />
+          <path d="m9.5 12.2 1.8 1.8 3.4-3.8" {...common} />
+        </svg>
+      );
+    case 'close':
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="m6 6 12 12" {...common} />
+          <path d="M18 6 6 18" {...common} />
         </svg>
       );
     case 'calendar':

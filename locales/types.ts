@@ -14,15 +14,34 @@ export type Messages = {
     languageLabel: string;
     languages: Record<Locale, string>;
     closed: string;
-    home: string;
+    discover: string;
     brand: string;
+    login: string;
   };
-  home: {
+  discover: {
     topNav: string[];
     location: string;
+    chooseLocation: string;
+    locationModal: {
+      title: string;
+      description: string;
+      useCurrentLocation: string;
+      useCurrentLocationHint: string;
+      addressPlaceholder: string;
+      saveAddress: string;
+      close: string;
+      privacyNote: string;
+      learnMore: string;
+    };
     heroTitle: string;
     heroSubtitle: string;
     searchPlaceholder: string;
+    emptyState: {
+      title: string;
+      description: string;
+      useMyLocation: string;
+      enterAddress: string;
+    };
     filters: {
       categories: string;
       features: string;
@@ -42,7 +61,7 @@ export type Messages = {
     };
   };
   restaurant: {
-    backToHome: string;
+    backToDiscover: string;
     eyebrow: string;
     description: string;
     tabs: string[];
@@ -51,7 +70,7 @@ export type Messages = {
   };
   branch: {
     backToBrand: string;
-    backToHome: string;
+    backToDiscover: string;
     eyebrow: string;
     description: string;
     tabs: string[];
@@ -59,7 +78,7 @@ export type Messages = {
   };
 };
 
-export type HomeContent = {
+export type DiscoverContent = {
   categories: Array<{ name: string; count: number }>;
   featureFilters: string[];
   distances: string[];

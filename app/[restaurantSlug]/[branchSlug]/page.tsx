@@ -25,8 +25,8 @@ export default function BranchPage({
           <Link href={withLocale(`/${params.restaurantSlug}`, locale)} className="pill">
             ← {messages.branch.backToBrand}
           </Link>
-          <Link href={withLocale('/', locale)} className="pill">
-            {messages.branch.backToHome}
+          <Link href={withLocale('/discover', locale)} className="pill">
+            {messages.branch.backToDiscover}
           </Link>
         </div>
 

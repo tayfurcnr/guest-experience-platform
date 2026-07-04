@@ -1,17 +1,15 @@
-import { Suspense } from 'react';
-import { HomePageClient } from './home-page-client';
-import { normalizeLocale } from '@/lib/i18n';
+import { redirect } from 'next/navigation';
 
 export default function Page({
   searchParams,
 }: {
   searchParams?: { lang?: string };
 }) {
-  const locale = normalizeLocale(searchParams?.lang);
+  const params = new URLSearchParams();
 
-  return (
-    <Suspense fallback={null}>
-      <HomePageClient locale={locale} />
-    </Suspense>
-  );
+  if (searchParams?.lang) {
+    params.set('lang', searchParams.lang);
+  }
+
+  redirect(params.toString() ? `/discover?${params.toString()}` : '/discover');
 }

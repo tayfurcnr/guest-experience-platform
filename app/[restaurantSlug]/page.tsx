@@ -24,8 +24,8 @@ export default function RestaurantPage({
     <main style={{ minHeight: '100vh', background: 'var(--bg)', padding: 24 }}>
       <div className="page">
         <div style={{ padding: '18px 0 32px' }}>
-          <Link href={withLocale('/', locale)} className="pill">
-            ← {messages.restaurant.backToHome}
+          <Link href={withLocale('/discover', locale)} className="pill">
+            ← {messages.restaurant.backToDiscover}
           </Link>
         </div>
 

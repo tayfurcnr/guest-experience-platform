@@ -2,9 +2,9 @@
 
 import { useRef } from 'react';
 import type { ReactNode } from 'react';
-import type { HomeContent, Locale } from '@/locales/types';
+import type { DiscoverContent, Locale } from '@/locales/types';
 
-type Category = HomeContent['categories'][number];
+type Category = DiscoverContent['categories'][number];
 
 function CategoryGlyph({ categoryName }: { categoryName: string }) {
   const key = categoryName.toLowerCase();
