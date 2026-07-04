@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { BusinessCard } from '@/components/business-card/BusinessCard';
 import { HeroSection } from '@/components/hero/HeroSection';
@@ -283,21 +283,66 @@ function CategoryGlyph({ categoryName }: { categoryName: string }) {
   );
 }
 
+function getCategoryImage(categoryName: string) {
+  const key = categoryName.toLowerCase();
+
+  if (key.includes('tümü') || key.includes('all')) {
+    return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=320&q=80';
+  }
+
+  if (key.includes('burger')) {
+    return 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=320&q=80';
+  }
+
+  if (key.includes('pizza')) {
+    return 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=320&q=80';
+  }
+
+  if (key.includes('kebap') || key.includes('kebab')) {
+    return 'https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?auto=format&fit=crop&w=320&q=80';
+  }
+
+  if (key.includes('kahve') || key.includes('coffee')) {
+    return 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=320&q=80';
+  }
+
+  if (key.includes('tatlı') || key.includes('dessert')) {
+    return 'https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?auto=format&fit=crop&w=320&q=80';
+  }
+
+  if (key.includes('türk') || key.includes('turkish')) {
+    return 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=320&q=80';
+  }
+
+  if (key.includes('dünya') || key.includes('world')) {
+    return 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=320&q=80';
+  }
+
+  if (key.includes('bar') || key.includes('cafe')) {
+    return 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=320&q=80';
+  }
+
+  return 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=320&q=80';
+}
+
 export function HomePageClient({ locale }: { locale: Locale }) {
-  const messages = useMemo(() => getMessages(locale), [locale]);
-  const content = useMemo(() => getHomeContent(locale), [locale]);
+  const messages = getMessages(locale);
+  const content = getHomeContent(locale);
   const [selectedCategory, setSelectedCategory] = useState(content.categories[0]);
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
   const [selectedDistance, setSelectedDistance] = useState(content.distances[3]);
+  const [selectedSort, setSelectedSort] = useState<'popular' | 'nearest' | 'topRated'>('popular');
   const [customDistanceKm, setCustomDistanceKm] = useState<number | null>(null);
-  const [openFilter, setOpenFilter] = useState<'distance' | null>(null);
+  const [openFilter, setOpenFilter] = useState<'distance' | 'sort' | null>(null);
   const [openNowOnly, setOpenNowOnly] = useState(false);
+  const categoryCarouselRef = useRef<HTMLDivElement | null>(null);
   const filtersMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     setSelectedCategory(content.categories[0]);
     setSelectedFeatures([]);
     setSelectedDistance(content.distances[3]);
+    setSelectedSort('popular');
     setCustomDistanceKm(null);
     setOpenNowOnly(false);
   }, [content]);
@@ -317,6 +362,7 @@ export function HomePageClient({ locale }: { locale: Locale }) {
     setSelectedCategory(content.categories[0]);
     setSelectedFeatures([]);
     setSelectedDistance(content.distances[3]);
+    setSelectedSort('popular');
     setCustomDistanceKm(null);
     setOpenNowOnly(false);
     setOpenFilter(null);
@@ -328,12 +374,18 @@ export function HomePageClient({ locale }: { locale: Locale }) {
     );
   };
 
-  const [, sortValue] = messages.home.filters.sortByPopular.includes(':')
-    ? messages.home.filters.sortByPopular.split(/:\s(.+)/)
-    : ['Sort', messages.home.filters.sortByPopular];
+  const applyCustomDistance = (nextDistance: number) => {
+    const safeDistance = Math.max(1, Math.min(50, nextDistance));
+    setCustomDistanceKm(safeDistance);
+    setSelectedDistance(`${safeDistance} km`);
+  };
+
+  const sortOptions = messages.home.filters.sortOptions;
+  const sortValue = sortOptions[selectedSort];
 
   const defaultCategoryName = content.categories[0]?.name;
   const defaultDistance = content.distances[3];
+  const numericDistanceValue = customDistanceKm ?? (Number.parseInt(selectedDistance, 10) || 5);
   const distanceLabel = customDistanceKm ? `${customDistanceKm} km` : selectedDistance;
   const hasActiveFilters =
     selectedCategory.name !== defaultCategoryName ||
@@ -345,6 +397,18 @@ export function HomePageClient({ locale }: { locale: Locale }) {
   const moreLabel = locale === 'tr' ? 'Daha Fazla' : 'More';
   const openNowLabel = locale === 'tr' ? 'Açık Olanlar' : 'Open Now';
   const featureSummary = selectedFeatures.length > 0 ? selectedFeatures.join(' • ') : messages.home.filters.features;
+
+  const quickDistanceLabel = locale === 'tr' ? 'Hızlı seçim' : 'Quick select';
+  const customDistanceLabel = locale === 'tr' ? 'Özel mesafe' : 'Custom distance';
+  const distanceRangeHint = locale === 'tr' ? '1 km ile 50 km arası ayarla' : 'Adjust between 1 km and 50 km';
+  const cuisinesLabel = locale === 'tr' ? 'Kategoriler' : 'Categories';
+
+  const scrollCategories = (direction: 'prev' | 'next') => {
+    categoryCarouselRef.current?.scrollBy({
+      left: direction === 'next' ? 520 : -520,
+      behavior: 'smooth',
+    });
+  };
 
   return (
     <main className="shell" id="top">
@@ -407,28 +471,48 @@ export function HomePageClient({ locale }: { locale: Locale }) {
       <section className="browse-surface">
         <section className="category-showcase" aria-label={messages.home.filters.categories}>
           <div className="category-showcase__head">
-            <h2>{messages.home.filters.categories}</h2>
-            <a href="#top" className="category-showcase__link">
-              {messages.home.sections.seeAll} <Icon name="chevron" />
-            </a>
+            <h2>{cuisinesLabel}</h2>
           </div>
 
-          <div className="category-grid">
-            {content.categories.map((category) => (
-              <button
-                key={category.name}
-                type="button"
-                className={`category-tile${selectedCategory.name === category.name ? ' active' : ''}`}
-                onClick={() => setSelectedCategory(category)}
-              >
-                <span className="category-tile__icon">
-                  <CategoryGlyph categoryName={category.name} />
-                </span>
-                <span className="category-tile__content">
-                  <strong>{category.name}</strong>
-                </span>
-              </button>
-            ))}
+          <div className="category-rail">
+            <button
+              className="category-rail__arrow category-rail__arrow--prev"
+              type="button"
+              aria-label={locale === 'tr' ? 'Önceki mutfaklar' : 'Previous cuisines'}
+              onClick={() => scrollCategories('prev')}
+            >
+              <Icon name="chevron" />
+            </button>
+
+            <div className="category-grid" ref={categoryCarouselRef}>
+              {content.categories.map((category) => (
+                <button
+                  key={category.name}
+                  type="button"
+                  className={`category-tile${selectedCategory.name === category.name ? ' active' : ''}`}
+                  onClick={() => setSelectedCategory(category)}
+                >
+                  <span className="category-tile__media">
+                    <img src={getCategoryImage(category.name)} alt="" />
+                    <span className="category-tile__icon">
+                      <CategoryGlyph categoryName={category.name} />
+                    </span>
+                  </span>
+                  <span className="category-tile__content">
+                    <strong>{category.name}</strong>
+                  </span>
+                </button>
+              ))}
+            </div>
+
+            <button
+              className="category-rail__arrow category-rail__arrow--next"
+              type="button"
+              aria-label={locale === 'tr' ? 'Sonraki mutfaklar' : 'Next cuisines'}
+              onClick={() => scrollCategories('next')}
+            >
+              <Icon name="chevron" />
+            </button>
           </div>
         </section>
 
@@ -436,15 +520,40 @@ export function HomePageClient({ locale }: { locale: Locale }) {
           <div className="filters-surface__label">{filtersLabel}</div>
 
           <div className={`filters-toolbar${openFilter ? ' filters-toolbar--menu-open' : ''}`} ref={filtersMenuRef}>
-            <button className="toolbar-pill toolbar-pill--select" type="button">
-              <span className="toolbar-pill__icon">
-                <Icon name="spark" />
-              </span>
-              <span className="toolbar-pill__label">{sortValue}</span>
-              <span className="toolbar-pill__chevron">
-                <Icon name="chevron" />
-              </span>
-            </button>
+            <div className="filters-dropdown">
+              <button
+                className="toolbar-pill toolbar-pill--select"
+                type="button"
+                aria-expanded={openFilter === 'sort'}
+                onClick={() => setOpenFilter((current) => (current === 'sort' ? null : 'sort'))}
+              >
+                <span className="toolbar-pill__icon">
+                  <Icon name="spark" />
+                </span>
+                <span className="toolbar-pill__label">{sortValue}</span>
+                <span className="toolbar-pill__chevron">
+                  <Icon name="chevron" />
+                </span>
+              </button>
+
+              {openFilter === 'sort' ? (
+                <div className="filters-dropdown__menu" role="menu" aria-label={messages.home.filters.sortByPopular}>
+                  {(['popular', 'nearest', 'topRated'] as const).map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      className={`filters-dropdown__item${selectedSort === option ? ' active' : ''}`}
+                      onClick={() => {
+                        setSelectedSort(option);
+                        setOpenFilter(null);
+                      }}
+                    >
+                      <span>{sortOptions[option]}</span>
+                    </button>
+                  ))}
+                </div>
+              ) : null}
+            </div>
 
             <div className="filters-dropdown">
               <button
@@ -464,46 +573,71 @@ export function HomePageClient({ locale }: { locale: Locale }) {
 
               {openFilter === 'distance' ? (
                 <div className="filters-dropdown__menu" role="menu" aria-label={messages.home.filters.distance}>
-                  {content.distances.map((distance) => (
-                    <button
-                      key={distance}
-                      type="button"
-                      className={`filters-dropdown__item${selectedDistance === distance ? ' active' : ''}`}
-                      onClick={() => {
-                        setSelectedDistance(distance);
-                        setCustomDistanceKm(null);
-                        setOpenFilter(null);
-                      }}
-                    >
-                      <span>{distance}</span>
-                    </button>
-                  ))}
+                  <div className="filters-dropdown__presets">
+                    <div className="filters-dropdown__section-title">{quickDistanceLabel}</div>
+                    <div className="filters-dropdown__preset-list">
+                      {content.distances.map((distance) => (
+                        <button
+                          key={distance}
+                          type="button"
+                          className={`filters-dropdown__preset${customDistanceKm === null && selectedDistance === distance ? ' active' : ''}`}
+                          onClick={() => {
+                            setSelectedDistance(distance);
+                            setCustomDistanceKm(null);
+                            setOpenFilter(null);
+                          }}
+                        >
+                          {distance}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
                   <div className="filters-dropdown__custom">
                     <div className="filters-dropdown__custom-head">
-                      <strong>{locale === 'tr' ? 'Özel Mesafe' : 'Custom Distance'}</strong>
+                      <strong>{customDistanceLabel}</strong>
                       <span>{distanceLabel}</span>
                     </div>
 
-                    <input
-                      className="filters-dropdown__range"
-                      type="range"
-                      min={1}
-                      max={50}
-                      step={1}
-                      value={customDistanceKm ?? (Number.parseInt(selectedDistance, 10) || 5)}
-                      onChange={(event) => {
-                        const nextDistance = Number(event.target.value);
-                        setCustomDistanceKm(nextDistance);
-                        setSelectedDistance(`${nextDistance} km`);
-                      }}
-                      aria-label={locale === 'tr' ? 'Özel mesafe seç' : 'Choose custom distance'}
-                    />
+                    <div className="filters-dropdown__range-row">
+                      <button
+                        type="button"
+                        className="filters-dropdown__stepper"
+                        aria-label={locale === 'tr' ? 'Mesafeyi azalt' : 'Decrease distance'}
+                        onClick={() => applyCustomDistance(numericDistanceValue - 1)}
+                      >
+                        -
+                      </button>
+
+                      <input
+                        className="filters-dropdown__range"
+                        type="range"
+                        min={1}
+                        max={50}
+                        step={1}
+                        value={numericDistanceValue}
+                        onChange={(event) => {
+                          applyCustomDistance(Number(event.target.value));
+                        }}
+                        aria-label={locale === 'tr' ? 'Özel mesafe seç' : 'Choose custom distance'}
+                      />
+
+                      <button
+                        type="button"
+                        className="filters-dropdown__stepper"
+                        aria-label={locale === 'tr' ? 'Mesafeyi artır' : 'Increase distance'}
+                        onClick={() => applyCustomDistance(numericDistanceValue + 1)}
+                      >
+                        +
+                      </button>
+                    </div>
 
                     <div className="filters-dropdown__range-scale" aria-hidden="true">
                       <span>1 km</span>
                       <span>50 km</span>
                     </div>
+
+                    <div className="filters-dropdown__range-hint">{distanceRangeHint}</div>
                   </div>
                 </div>
               ) : null}

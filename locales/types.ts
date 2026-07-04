@@ -28,6 +28,11 @@ export type Messages = {
       features: string;
       distance: string;
       sortByPopular: string;
+      sortOptions: {
+        popular: string;
+        nearest: string;
+        topRated: string;
+      };
       clear: string;
     };
     sections: {

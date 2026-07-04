@@ -22,6 +22,11 @@ export const tr: Messages = {
       features: 'Özellikler',
       distance: 'Mesafe',
       sortByPopular: 'Sıralama: En Popüler',
+      sortOptions: {
+        popular: 'En Popüler',
+        nearest: 'En Yakın',
+        topRated: 'En Yüksek Puan',
+      },
       clear: 'Filtreleri Temizle',
     },
     sections: {

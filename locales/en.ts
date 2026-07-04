@@ -22,6 +22,11 @@ export const en: Messages = {
       features: 'Features',
       distance: 'Distance',
       sortByPopular: 'Sort: Most Popular',
+      sortOptions: {
+        popular: 'Most Popular',
+        nearest: 'Nearest',
+        topRated: 'Top Rated',
+      },
       clear: 'Clear Filters',
     },
     sections: {
