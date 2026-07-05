@@ -35,6 +35,8 @@ type BusinessCardProps = {
   closedLabel: string;
   favoriteLabel?: string;
   initialIsFavorite?: boolean;
+  favoriteDisabled?: boolean;
+  onFavoriteClick?: () => void;
   onFavoriteToggle?: (nextValue: boolean) => void;
 };
 
@@ -43,6 +45,8 @@ export function BusinessCard({
   closedLabel,
   favoriteLabel,
   initialIsFavorite = false,
+  favoriteDisabled = false,
+  onFavoriteClick,
   onFavoriteToggle,
 }: BusinessCardProps) {
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
@@ -53,11 +57,16 @@ export function BusinessCard({
         <span className="spot-card__badge">{item.distance}</span>
         {item.isOpen === false ? <span className="spot-card__state">{closedLabel}</span> : null}
         <button
-          className={`spot-card__favorite${isFavorite ? ' is-active' : ''}`}
+          className={`spot-card__favorite${isFavorite ? ' is-active' : ''}${favoriteDisabled ? ' is-disabled' : ''}`}
           type="button"
           aria-label={favoriteLabel ?? `${item.name} favorite`}
           aria-pressed={isFavorite}
           onClick={() => {
+            if (favoriteDisabled) {
+              onFavoriteClick?.();
+              return;
+            }
+
             const nextValue = !isFavorite;
             setIsFavorite(nextValue);
             onFavoriteToggle?.(nextValue);

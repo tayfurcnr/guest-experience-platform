@@ -14,6 +14,9 @@ export const en: Messages = {
     loginModal: {
       title: 'Log in',
       description: 'Log in to continue with your account.',
+      reasons: {
+        favorite: 'You need to log in to add venues to your favorites.',
+      },
       tabs: {
         user: 'Personal',
         business: 'Business',
@@ -28,6 +31,8 @@ export const en: Messages = {
       divider: 'or',
       signupPrompt: "Don't have an account?",
       signupAction: 'Sign up',
+      partnerPrompt: 'Want to bring your business to Venuego?',
+      partnerAction: 'Become our partner',
       close: 'Close',
     },
   },

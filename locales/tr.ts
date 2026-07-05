@@ -14,6 +14,9 @@ export const tr: Messages = {
     loginModal: {
       title: 'Giriş yap',
       description: 'Hesabına giriş yaparak devam et.',
+      reasons: {
+        favorite: 'İşletmeleri favorilerine eklemek için giriş yapman gerekiyor.',
+      },
       tabs: {
         user: 'Bireysel',
         business: 'Kurumsal',
@@ -28,6 +31,8 @@ export const tr: Messages = {
       divider: 'veya',
       signupPrompt: 'Hesabın yok mu?',
       signupAction: 'Kayıt ol',
+      partnerPrompt: 'İşletmeni Venuego’ya taşımak ister misin?',
+      partnerAction: 'İş ortağımız ol',
       close: 'Kapat',
     },
   },

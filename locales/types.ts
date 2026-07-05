@@ -20,6 +20,9 @@ export type Messages = {
     loginModal: {
       title: string;
       description: string;
+      reasons: {
+        favorite: string;
+      };
       tabs: {
         user: string;
         business: string;
@@ -34,6 +37,8 @@ export type Messages = {
       divider: string;
       signupPrompt: string;
       signupAction: string;
+      partnerPrompt: string;
+      partnerAction: string;
       close: string;
     };
   };

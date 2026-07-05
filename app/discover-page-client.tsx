@@ -86,6 +86,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loginModalReason, setLoginModalReason] = useState<string | null>(null);
   const filtersMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -98,6 +99,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
     setSelectedLocation(null);
     setIsLocationModalOpen(false);
     setIsLoginModalOpen(false);
+    setLoginModalReason(null);
   }, [content]);
 
   useEffect(() => {
@@ -133,6 +135,12 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
 
   const closeLoginModal = () => {
     setIsLoginModalOpen(false);
+    setLoginModalReason(null);
+  };
+
+  const openLoginModal = (reason?: string) => {
+    setLoginModalReason(reason ?? null);
+    setIsLoginModalOpen(true);
   };
 
   const useCurrentLocation = () => {
@@ -169,6 +177,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
   const distanceRangeHint = locale === 'tr' ? '1 km ile 50 km arasını ayarla' : 'Adjust between 1 km and 50 km';
   const categoriesLabel = locale === 'tr' ? 'Kategoriler' : 'Categories';
   const hasLocation = selectedLocation !== null;
+  const isLoggedIn = false;
   const locationPillText = selectedLocation ?? messages.discover.chooseLocation;
   const discoverGateTitle = messages.discover.emptyState.title;
   const discoverGateMessage = messages.discover.emptyState.description;
@@ -200,7 +209,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
             </span>
           </button>
 
-          <button className="top-primary-action" type="button" onClick={() => setIsLoginModalOpen(true)}>
+          <button className="top-primary-action" type="button" onClick={() => openLoginModal()}>
             <span className="top-primary-action__icon">
               <DiscoverIcon name="login" />
             </span>
@@ -271,7 +280,13 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
             <div className="section-row-wrap">
               <div className="card-row">
                 {content.items.popular.map((item) => (
-                  <BusinessCard key={item.name} item={item} closedLabel={messages.common.closed} />
+                  <BusinessCard
+                    key={item.name}
+                    item={item}
+                    closedLabel={messages.common.closed}
+                    favoriteDisabled={!isLoggedIn}
+                    onFavoriteClick={() => openLoginModal(messages.common.loginModal.reasons.favorite)}
+                  />
                 ))}
               </div>
               <button className="row-arrow" type="button" aria-label="Scroll right">
@@ -289,7 +304,13 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
             <div className="section-row-wrap">
               <div className="card-row">
                 {content.items.nearby.map((item) => (
-                  <BusinessCard key={item.name} item={item} closedLabel={messages.common.closed} />
+                  <BusinessCard
+                    key={item.name}
+                    item={item}
+                    closedLabel={messages.common.closed}
+                    favoriteDisabled={!isLoggedIn}
+                    onFavoriteClick={() => openLoginModal(messages.common.loginModal.reasons.favorite)}
+                  />
                 ))}
               </div>
               <button className="row-arrow" type="button" aria-label="Scroll right">
@@ -324,7 +345,12 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
         onUseAddress={useEnteredAddress}
       />
 
-      <LoginModal isOpen={isLoginModalOpen} messages={messages.common.loginModal} onClose={closeLoginModal} />
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        messages={messages.common.loginModal}
+        reason={loginModalReason}
+        onClose={closeLoginModal}
+      />
     </main>
   );
 }

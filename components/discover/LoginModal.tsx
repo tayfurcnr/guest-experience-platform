@@ -10,10 +10,11 @@ type LoginRole = 'user' | 'business';
 type LoginModalProps = {
   isOpen: boolean;
   messages: LoginModalMessages;
+  reason?: string | null;
   onClose: () => void;
 };
 
-export function LoginModal({ isOpen, messages, onClose }: LoginModalProps) {
+export function LoginModal({ isOpen, messages, reason, onClose }: LoginModalProps) {
   const [selectedRole, setSelectedRole] = useState<LoginRole>('user');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -40,6 +41,9 @@ export function LoginModal({ isOpen, messages, onClose }: LoginModalProps) {
     return null;
   }
 
+  const footerPrompt = selectedRole === 'business' ? messages.partnerPrompt : messages.signupPrompt;
+  const footerAction = selectedRole === 'business' ? messages.partnerAction : messages.signupAction;
+
   return (
     <div className="modal-backdrop" role="presentation" onClick={onClose}>
       <div
@@ -60,6 +64,8 @@ export function LoginModal({ isOpen, messages, onClose }: LoginModalProps) {
             <DiscoverIcon name="close" />
           </button>
         </div>
+
+        {reason ? <div className="login-modal__reason">{reason}</div> : null}
 
         <div className="login-modal__tabs" role="tablist" aria-label={messages.title}>
           <button
@@ -130,9 +136,9 @@ export function LoginModal({ isOpen, messages, onClose }: LoginModalProps) {
         </button>
 
         <div className="login-modal__footer">
-          <span>{messages.signupPrompt}</span>
+          <span>{footerPrompt}</span>
           <button className="login-modal__text-link" type="button">
-            {messages.signupAction}
+            {footerAction}
           </button>
         </div>
       </div>
