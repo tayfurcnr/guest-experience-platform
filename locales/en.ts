@@ -32,7 +32,11 @@ export const en: Messages = {
     },
   },
   discover: {
-    topNav: ['Discover', 'Offers', 'Favorites', 'Reservations'],
+    topNav: {
+      guest: ['Discover', 'Offers', 'Reservations'],
+      user: ['Discover', 'Offers', 'Favorites', 'My Reservations'],
+      business: ['Dashboard', 'Branches', 'Reservations', 'Offers'],
+    },
     location: 'Kadikoy, Istanbul',
     chooseLocation: 'Choose location',
     locationModal: {

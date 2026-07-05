@@ -38,7 +38,11 @@ export type Messages = {
     };
   };
   discover: {
-    topNav: string[];
+    topNav: {
+      guest: string[];
+      user: string[];
+      business: string[];
+    };
     location: string;
     chooseLocation: string;
     locationModal: {

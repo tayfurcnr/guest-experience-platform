@@ -32,7 +32,11 @@ export const tr: Messages = {
     },
   },
   discover: {
-    topNav: ['Keşfet', 'Kampanyalar', 'Favorilerim', 'Rezervasyon'],
+    topNav: {
+      guest: ['Keşfet', 'Kampanyalar', 'Rezervasyon'],
+      user: ['Keşfet', 'Kampanyalar', 'Favorilerim', 'Rezervasyonlarım'],
+      business: ['Panel', 'Şubeler', 'Rezervasyonlar', 'Kampanyalar'],
+    },
     location: 'Kadıköy, İstanbul',
     chooseLocation: 'Konum seç',
     locationModal: {

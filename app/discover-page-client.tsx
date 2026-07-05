@@ -172,6 +172,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
   const locationPillText = selectedLocation ?? messages.discover.chooseLocation;
   const discoverGateTitle = messages.discover.emptyState.title;
   const discoverGateMessage = messages.discover.emptyState.description;
+  const activeTopNav = messages.discover.topNav.guest;
 
   return (
     <main className="shell" id="top">
@@ -181,7 +182,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
         </a>
 
         <nav className="top-nav" aria-label="Main navigation">
-          {messages.discover.topNav.map((item, index) => (
+          {activeTopNav.map((item, index) => (
             <a key={item} href="#top" className={index === 0 ? 'active' : ''}>
               {item}
             </a>
