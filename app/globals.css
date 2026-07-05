@@ -236,35 +236,16 @@ svg {
 
 .location-modal__header {
   position: relative;
-  min-height: 72px;
+  min-height: 44px;
   display: flex;
   align-items: center;
-  justify-content: center;
-}
-
-.location-modal__header-icon {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 72px;
-  height: 72px;
-  border-radius: 999px;
-  background: linear-gradient(180deg, rgba(15, 142, 160, 0.1), rgba(15, 142, 160, 0.04));
-  color: var(--teal);
-  display: grid;
-  place-items: center;
-  flex: 0 0 auto;
-}
-
-.location-modal__header-icon svg {
-  width: 34px;
-  height: 34px;
+  justify-content: flex-start;
 }
 
 .location-modal__header-copy {
   width: 100%;
-  max-width: calc(100% - 168px);
-  text-align: center;
+  max-width: calc(100% - 68px);
+  text-align: left;
 }
 
 .location-modal__header strong {
@@ -519,6 +500,251 @@ svg {
 .location-modal__learn-more svg {
   width: 16px;
   height: 16px;
+}
+
+.login-modal {
+  width: min(100%, 560px);
+  padding: 18px 24px 20px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top left, rgba(15, 142, 160, 0.07), transparent 18%),
+    rgba(255, 255, 255, 0.985);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 30px 90px rgba(15, 23, 42, 0.28);
+}
+
+.login-modal__handle {
+  width: 42px;
+  height: 4px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #12b9cb, #0f8ea0);
+  margin: 0 auto 14px;
+}
+
+.login-modal__header {
+  position: relative;
+  min-height: 44px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.login-modal__header-copy {
+  width: 100%;
+  max-width: calc(100% - 60px);
+}
+
+.login-modal__header strong {
+  display: block;
+  font-size: 26px;
+  line-height: 1.1;
+  letter-spacing: -0.05em;
+  color: #0f172a;
+}
+
+.login-modal__header p {
+  margin: 8px 0 0;
+  color: #667085;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.login-modal__close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(15, 23, 42, 0.04);
+  border-radius: 999px;
+  background: rgba(248, 250, 252, 0.98);
+  color: #0f172a;
+  display: grid;
+  place-items: center;
+}
+
+.login-modal__close svg {
+  width: 18px;
+  height: 18px;
+}
+
+.login-modal__tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 18px;
+  padding: 4px;
+  border-radius: 14px;
+  background: rgba(248, 250, 252, 0.95);
+  border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.login-modal__tab {
+  min-height: 42px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
+  color: #64748b;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.login-modal__tab.is-active {
+  background: #fff;
+  color: #0f172a;
+  box-shadow: 0 10px 18px rgba(15, 23, 42, 0.06);
+}
+
+.login-modal__form {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.login-modal__field {
+  display: grid;
+  gap: 8px;
+}
+
+.login-modal__field span {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.login-modal__field input {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  background: #fff;
+  color: #0f172a;
+  outline: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.login-modal__field input:focus {
+  border-color: rgba(15, 142, 160, 0.32);
+  box-shadow: 0 0 0 4px rgba(15, 142, 160, 0.08);
+}
+
+.login-modal__meta {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.login-modal__text-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #0f9fb0;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.login-modal__submit {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #14a8b9, #0f8ea0);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 16px 30px rgba(15, 142, 160, 0.22);
+}
+
+.login-modal__submit:hover {
+  transform: translateY(-1px);
+}
+
+.login-modal__submit-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-modal__submit-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.login-modal__divider {
+  position: relative;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.login-modal__divider::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1px;
+  background: rgba(15, 23, 42, 0.08);
+}
+
+.login-modal__divider span {
+  position: relative;
+  display: inline-block;
+  padding: 0 12px;
+  background: #fff;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.login-modal__google {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 14px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 14px;
+  background: #fff;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.login-modal__google:hover {
+  transform: translateY(-1px);
+  border-color: rgba(15, 142, 160, 0.18);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.05);
+}
+
+.login-modal__google-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-modal__google-icon svg {
+  width: 18px;
+  height: 18px;
+}
+
+.login-modal__footer {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: #64748b;
+  font-size: 13px;
 }
 
 .location-pill {
@@ -1846,21 +2072,11 @@ svg {
   }
 
   .location-modal__header {
-    min-height: 64px;
-  }
-
-  .location-modal__header-icon {
-    width: 64px;
-    height: 64px;
-  }
-
-  .location-modal__header-icon svg {
-    width: 30px;
-    height: 30px;
+    min-height: 44px;
   }
 
   .location-modal__header-copy {
-    max-width: calc(100% - 144px);
+    max-width: calc(100% - 60px);
   }
 
   .location-modal__header strong {
@@ -1904,6 +2120,32 @@ svg {
   }
 
   .location-modal__submit {
+    min-height: 50px;
+    font-size: 15px;
+  }
+
+  .login-modal {
+    padding: 16px;
+    border-radius: 22px;
+  }
+
+  .login-modal__header strong {
+    font-size: 24px;
+  }
+
+  .login-modal__header p {
+    font-size: 14px;
+  }
+
+  .login-modal__tab {
+    min-height: 40px;
+  }
+
+  .login-modal__field input {
+    min-height: 48px;
+  }
+
+  .login-modal__submit {
     min-height: 50px;
     font-size: 15px;
   }

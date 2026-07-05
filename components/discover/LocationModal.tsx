@@ -74,9 +74,6 @@ export function LocationModal({
         <div className="location-modal__handle" />
 
         <div className="location-modal__header">
-          <div className="location-modal__header-icon">
-            <DiscoverIcon name="pin" />
-          </div>
           <div className="location-modal__header-copy">
             <strong id="location-modal-title">{messages.title}</strong>
             {messages.description ? <p>{messages.description}</p> : null}

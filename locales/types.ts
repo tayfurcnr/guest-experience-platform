@@ -17,6 +17,25 @@ export type Messages = {
     discover: string;
     brand: string;
     login: string;
+    loginModal: {
+      title: string;
+      description: string;
+      tabs: {
+        user: string;
+        business: string;
+      };
+      usernameLabel: string;
+      usernamePlaceholder: string;
+      passwordLabel: string;
+      passwordPlaceholder: string;
+      forgotPassword: string;
+      submit: string;
+      google: string;
+      divider: string;
+      signupPrompt: string;
+      signupAction: string;
+      close: string;
+    };
   };
   discover: {
     topNav: string[];

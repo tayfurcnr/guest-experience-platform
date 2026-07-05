@@ -6,6 +6,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { BusinessCard } from '@/components/business-card/BusinessCard';
 import { CategoryCarousel } from '@/components/discover/CategoryCarousel';
 import { DiscoverIcon } from '@/components/discover/DiscoverIcon';
+import { LoginModal } from '@/components/discover/LoginModal';
 import { LocationModal } from '@/components/discover/LocationModal';
 import { FiltersBar } from '@/components/discover/FiltersBar';
 import { HeroSection } from '@/components/hero/HeroSection';
@@ -84,6 +85,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
   const [openNowOnly, setOpenNowOnly] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<string | null>(null);
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const filtersMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -95,6 +97,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
     setOpenNowOnly(false);
     setSelectedLocation(null);
     setIsLocationModalOpen(false);
+    setIsLoginModalOpen(false);
   }, [content]);
 
   useEffect(() => {
@@ -126,6 +129,10 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
 
   const closeLocationModal = () => {
     setIsLocationModalOpen(false);
+  };
+
+  const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
   };
 
   const useCurrentLocation = () => {
@@ -192,7 +199,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
             </span>
           </button>
 
-          <button className="top-primary-action" type="button">
+          <button className="top-primary-action" type="button" onClick={() => setIsLoginModalOpen(true)}>
             <span className="top-primary-action__icon">
               <DiscoverIcon name="login" />
             </span>
@@ -315,6 +322,8 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
         onUseCurrentLocation={useCurrentLocation}
         onUseAddress={useEnteredAddress}
       />
+
+      <LoginModal isOpen={isLoginModalOpen} messages={messages.common.loginModal} onClose={closeLoginModal} />
     </main>
   );
 }
