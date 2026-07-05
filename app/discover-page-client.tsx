@@ -18,10 +18,12 @@ function LanguageSwitcher({
   locale,
   languageLabel,
   labels,
+  className = 'language-switcher',
 }: {
   locale: Locale;
   languageLabel: string;
   labels: Record<Locale, string>;
+  className?: string;
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -34,7 +36,7 @@ function LanguageSwitcher({
   };
 
   return (
-    <div className="language-switcher" aria-label={languageLabel}>
+    <div className={className} aria-label={languageLabel}>
       {(['tr', 'en'] as const).map((option) => (
         <button
           key={option}
@@ -87,6 +89,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [loginModalReason, setLoginModalReason] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const filtersMenuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -100,6 +103,7 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
     setIsLocationModalOpen(false);
     setIsLoginModalOpen(false);
     setLoginModalReason(null);
+    setIsMobileMenuOpen(false);
   }, [content]);
 
   useEffect(() => {
@@ -180,15 +184,29 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
   const isLoggedIn = false;
   const locationPillText = selectedLocation ?? messages.discover.chooseLocation;
   const discoverGateTitle = messages.discover.emptyState.title;
-  const discoverGateMessage = messages.discover.emptyState.description;
   const activeTopNav = messages.discover.topNav.guest;
 
   return (
     <main className="shell" id="top">
       <header className="topbar">
-        <a className="brand" href="#top" aria-label="Venuego">
-          <Image className="brand-logo" src="/logo-wordmark.png" alt="Venuego logo" width={853} height={212} priority />
-        </a>
+        <div className="topbar-main">
+          <button
+            className="menu-toggle"
+            type="button"
+            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={isMobileMenuOpen}
+            aria-controls="mobile-drawer"
+            onClick={() => setIsMobileMenuOpen((current) => !current)}
+          >
+            <DiscoverIcon name={isMobileMenuOpen ? 'close' : 'menu'} />
+          </button>
+
+          <a className="brand" href="#top" aria-label="Venuego">
+            <Image className="brand-logo" src="/logo-wordmark.png" alt="Venuego logo" width={853} height={212} priority />
+          </a>
+
+          <span className="topbar-main__spacer" aria-hidden="true" />
+        </div>
 
         <nav className="top-nav" aria-label="Main navigation">
           {activeTopNav.map((item, index) => (
@@ -215,6 +233,63 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
             </span>
             {messages.common.login}
           </button>
+        </div>
+
+        <div
+          id="mobile-drawer"
+          className={`mobile-drawer${isMobileMenuOpen ? ' is-open' : ''}`}
+          aria-hidden={!isMobileMenuOpen}
+        >
+          <button
+            className="mobile-drawer__backdrop"
+            type="button"
+            aria-label="Close menu"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+
+          <nav className="mobile-drawer__nav" aria-label="Mobile navigation">
+            <a className="mobile-drawer__brand" href="#top" aria-label="Venuego" onClick={() => setIsMobileMenuOpen(false)}>
+              <Image className="mobile-drawer__brand-logo" src="/logo-wordmark.png" alt="Venuego logo" width={853} height={212} />
+            </a>
+
+            {activeTopNav.map((item, index) => (
+              <a
+                key={item}
+                href="#top"
+                className={index === 0 ? 'active' : ''}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {item}
+              </a>
+            ))}
+
+            <div className="mobile-drawer__footer">
+              <div className="mobile-drawer__separator" aria-hidden="true" />
+
+              <div className="mobile-drawer__footer-actions">
+                <button
+                  className="mobile-drawer__action"
+                  type="button"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    openLoginModal();
+                  }}
+                >
+                  <span className="top-primary-action__icon">
+                    <DiscoverIcon name="login" />
+                  </span>
+                  {messages.common.login}
+                </button>
+
+                <LanguageSwitcher
+                  locale={locale}
+                  languageLabel={messages.common.languageLabel}
+                  labels={messages.common.languages}
+                  className="language-switcher language-switcher--minimal"
+                />
+              </div>
+            </div>
+          </nav>
         </div>
       </header>
 
@@ -319,20 +394,14 @@ export function DiscoverPageClient({ locale }: { locale: Locale }) {
             </div>
           </section>
         </>
-      ) : (
-        <section className="section">
-          <div className="empty">
-            <strong>{discoverGateTitle}</strong>
-            <div style={{ marginTop: 8 }}>{discoverGateMessage}</div>
-          </div>
-        </section>
-      )}
+      ) : null}
 
       <div className="floating-locale">
         <LanguageSwitcher
           locale={locale}
           languageLabel={messages.common.languageLabel}
           labels={messages.common.languages}
+          className="language-switcher"
         />
       </div>
 
